@@ -2,18 +2,18 @@ export const CreateThread = () => {
   return (
     <>
       <div className="h-[96px] w-full border-b-[1px] border-borderColor">
-        <div className="flex h-full gap-x-[12px] p-[16px]">
+        <div className="flex gap-x-[12px] p-[16px]">
           <div>
             <div className="h-[36px] w-[36px] rounded-full bg-blue-600"></div>{" "}
           </div>
           <div className="flex w-full flex-col gap-[12px]">
-            <span className="font-m text-m leading-m h-[19px] font-inter text-textGray">
+            <span className="font-m text-m leading-m font-inter text-textGray">
               Type something interesting here
             </span>
             <div className="flex w-full justify-end">
               <button
                 className={
-                  "leading-xs font-xs h-[33px] w-[58px] rounded-[8px] border-[1px] border-borderColor bg-bgLighter text-center font-inter text-xs font-normal text-textWhite"
+                  "leading-xs font-xs h-[33px] w-[58px] rounded-[8px] border-[1px] border-borderColor bg-bgLighter text-center font-inter text-xs text-textWhite"
                 }
                 type="submit"
               >
