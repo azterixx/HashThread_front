@@ -8,29 +8,23 @@ export const CreateThread = () => {
   const [text, setText] = useState("");
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
-  // Подключаем QueryClient для доступа к invalidateQueries
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation<PostThreadResponse, Error, string>({
     mutationFn: postThread,
-
     onSuccess: (data: PostThreadResponse) => {
-      // Очищаем текст и сбрасываем высоту textarea
       setText("");
       if (textAreaRef.current) {
         textAreaRef.current.style.height = "auto";
       }
       console.log("Успешно создан тред с ID:", data.id);
-
       queryClient.invalidateQueries({ queryKey: ["threads"] });
     },
-
     onError: (error: Error) => {
       console.error("Ошибка при создании треда:", error);
     },
   });
 
-  // Автоматический resize для textarea
   const autoResize = useCallback(() => {
     if (textAreaRef.current) {
       textAreaRef.current.style.height = "auto";
@@ -44,12 +38,21 @@ export const CreateThread = () => {
   };
 
   const handlePost = () => {
-    if (!text.trim()) return; // Не даём отправлять пустое сообщение
+    if (!text.trim()) return;
     mutate(text);
   };
 
+  // Функция для фокусировки на textarea
+  const handleFocus = () => {
+    textAreaRef.current?.focus();
+  };
+
   return (
-    <div className="h-auto w-full border-b border-borderColor">
+    // Добавляем onClick для фокусировки
+    <div
+      className="h-auto w-full border-b border-borderColor"
+      onClick={handleFocus}
+    >
       <div className="flex gap-3 p-4">
         {/* Аватар или иконка пользователя */}
         <div>
