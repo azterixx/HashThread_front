@@ -18,7 +18,7 @@ export function Feed({ children }: FeedProps) {
   } = useQuery<ThreadProps[]>({
     queryKey: ["threads"],
     queryFn: fetchFeed,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
     refetchInterval: 10_000,
   });
 
