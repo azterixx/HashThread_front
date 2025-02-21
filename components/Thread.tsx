@@ -25,7 +25,7 @@ export const Thread: React.FC<ThreadComponentProps> = ({ thread }) => {
     mutationFn: () => toggleLikeThread(thread._id),
     onMutate: async () => {
       // Останавливаем запросы для ключа ["threads"]
-      await queryClient.cancelQueries({ queryKey: ["feed"] });
+      await queryClient.cancelQueries({ queryKey: ["threads"] });
       // Сохраняем текущие данные
       const previousData = queryClient.getQueryData<ThreadProps[]>(["threads"]);
 
