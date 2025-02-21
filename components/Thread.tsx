@@ -77,7 +77,7 @@ export const Thread: React.FC<ThreadComponentProps> = ({ thread }) => {
           <span className="inline-block h-[19px] font-inter font-mMedium leading-mMedium text-textWhite">
             Аноним
           </span>
-          <p className="font-inter text-m font-m leading-m text-textWhite">
+          <p className="custom-wrap-class font-inter text-m font-m leading-m text-textWhite">
             {thread.text}
           </p>
         </div>

@@ -17,3 +17,10 @@ body {
   background-color: #CBFDBA;
   /*color: #FFFFFF;*/
 }
+
+@layer utilities {
+  .custom-wrap-class {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}
