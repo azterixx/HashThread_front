@@ -1,18 +1,12 @@
-// src/api/feed.ts
+import { ThreadProps } from "./Thread";
+import { API_URL } from "../constants";
 
-export interface FeedData {
-  _id: string;
-  text: string;
-  messageCount: number;
-  likeCount: number;
-  createdAt: string;
-}
-
-// Функция для получения данных с сервера
-export const fetchFeed = async (): Promise<FeedData[]> => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/feed`);
+export async function fetchFeed(): Promise<ThreadProps[]> {
+  const response = await fetch(`${API_URL}/feed`, {
+    credentials: "include",
+  });
   if (!response.ok) {
     throw new Error("Network response was not ok");
   }
   return response.json();
-};
+}

@@ -8,7 +8,7 @@ import { TanstackProvider } from "../../components/providers/tanstack-provider";
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
   variable: "--font-inter",
-  weight: ["400", "700"],
+  weight: ["400", "500"],
 });
 
 export default function RootLayout({
@@ -20,7 +20,7 @@ export default function RootLayout({
 
   return (
     <html lang="en" className={inter.variable}>
-      <body>
+      <body className={"antialiased"}>
         <TanstackProvider>
           <NavBar />
           <Feed>

@@ -1,6 +1,6 @@
 // src/app/QueryClientWrapper.tsx
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 
 interface QueryClientWrapperProps {
   children: ReactNode;

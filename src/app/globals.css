@@ -5,3 +5,15 @@
 body {
   background-color: #0f0f0f;
 }
+
+
+::selection {
+  background-color: #CBFDBA;
+  color: #0A0A0A;
+}
+
+/* Для Firefox (старые версии) */
+::-moz-selection {
+  background-color: #CBFDBA;
+  /*color: #FFFFFF;*/
+}

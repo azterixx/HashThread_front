@@ -1,97 +1,86 @@
+"use client";
+
+import React, { useState, useRef, useCallback } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { postThread, PostThreadResponse } from "../lib/api/Thread";
+
 export const CreateThread = () => {
+  const [text, setText] = useState("");
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
+
+  // Подключаем QueryClient для доступа к invalidateQueries
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending } = useMutation<PostThreadResponse, Error, string>({
+    mutationFn: postThread,
+
+    onSuccess: (data: PostThreadResponse) => {
+      // Очищаем текст и сбрасываем высоту textarea
+      setText("");
+      if (textAreaRef.current) {
+        textAreaRef.current.style.height = "auto";
+      }
+      console.log("Успешно создан тред с ID:", data.id);
+
+      queryClient.invalidateQueries({ queryKey: ["threads"] });
+    },
+
+    onError: (error: Error) => {
+      console.error("Ошибка при создании треда:", error);
+    },
+  });
+
+  // Автоматический resize для textarea
+  const autoResize = useCallback(() => {
+    if (textAreaRef.current) {
+      textAreaRef.current.style.height = "auto";
+      textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
+    }
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setText(e.target.value);
+    autoResize();
+  };
+
+  const handlePost = () => {
+    if (!text.trim()) return; // Не даём отправлять пустое сообщение
+    mutate(text);
+  };
+
   return (
-    <>
-      <div className="h-[96px] w-full border-b-[1px] border-borderColor">
-        <div className="flex gap-x-[12px] p-[16px]">
-          <div>
-            <div className="h-[36px] w-[36px] rounded-full bg-blue-600"></div>{" "}
+    <div className="h-auto w-full border-b border-borderColor">
+      <div className="flex gap-3 p-4">
+        {/* Аватар или иконка пользователя */}
+        <div>
+          <div className="h-9 w-9 rounded-full bg-blue-600" />
+        </div>
+
+        {/* Блок с textarea и кнопкой */}
+        <div className="flex w-full flex-col gap-3">
+          <textarea
+            ref={textAreaRef}
+            className="caret-primaryGreen w-full resize-none overflow-hidden rounded-md border border-transparent bg-bgDark p-2 font-inter text-m leading-m text-textGray focus:outline-none"
+            placeholder="Type something interesting here"
+            value={text}
+            onChange={handleChange}
+            rows={1}
+          />
+          <div className="flex w-full justify-end">
+            <button
+              type="button"
+              onClick={handlePost}
+              className={
+                text
+                  ? "bg-primaryGreen text-bgDarker h-[33px] w-[58px] rounded-[8px] text-center font-inter text-xs leading-xs"
+                  : "h-[33px] w-[58px] rounded-[8px] border border-borderColor bg-bgLighter text-center font-inter text-xs leading-xs text-textWhite"
+              }
+            >
+              {isPending ? "..." : "Post"}
+            </button>
           </div>
-          <div className="flex w-full flex-col gap-[12px]">
-            <span className="font-m text-m leading-m font-inter text-textGray">
-              Type something interesting here
-            </span>
-            <div className="flex w-full justify-end">
-              <button
-                className={
-                  "leading-xs font-xs h-[33px] w-[58px] rounded-[8px] border-[1px] border-borderColor bg-bgLighter text-center font-inter text-xs text-textWhite"
-                }
-                type="submit"
-              >
-                Post
-              </button>
-            </div>
-          </div>
-          {/*<form className={"ml-[12px] p-[12px]"} action="/submit" method="POST">*/}
-          {/*  <textarea*/}
-          {/*    spellCheck="false"*/}
-          {/*    className={"resize-none bg-transparent"}*/}
-          {/*    name="post_text"*/}
-          {/*    // rows="4"*/}
-          {/*    // cols="50"*/}
-          {/*    placeholder="Напишите ваш текст здесь..."*/}
-          {/*  ></textarea>*/}
-          {/*</form>*/}
-          {/*<div className={"w-full"}>*/}
-          {/*  <button*/}
-          {/*    className={*/}
-          {/*      "bg-bgLighter h-[33px] w-[58px] rounded-[8px] text-center text-white"*/}
-          {/*    }*/}
-          {/*    type="submit"*/}
-          {/*  >*/}
-          {/*    Post*/}
-          {/*  </button>*/}
-          {/*</div>*/}
         </div>
       </div>
-
-      {/*<div className="inline-flex h-24 w-[640px] items-start justify-start gap-3 border-b border-[#454545] bg-[#181818] p-4">*/}
-      {/*  <div className="flex items-start justify-center gap-2.5">*/}
-      {/*    <div className="relative h-9 w-9">*/}
-      {/*      <div className="absolute left-0 top-0 h-9 w-9 rounded-full border border-[#d9d9d9] bg-[#82837e]" />*/}
-      {/*    </div>*/}
-      {/*  </div>*/}
-      {/*  <div className="inline-flex w-[564px] flex-col items-start justify-start gap-3">*/}
-      {/*    <div className="flex h-[19px] flex-col items-start justify-start gap-3 self-stretch">*/}
-      {/*      <div className="flex h-[19px] flex-col items-start justify-start gap-3">*/}
-      {/*        <div className="self-stretch font-['Inter'] text-sm font-normal leading-[19px] text-[#999999]">*/}
-      {/*          Type something interesting here*/}
-      {/*        </div>*/}
-      {/*      </div>*/}
-      {/*    </div>*/}
-      {/*    <div className="inline-flex items-start justify-start gap-[146px] self-stretch">*/}
-      {/*      <div className={"h-[24px] w-[360px]"}></div>*/}
-      {/*      <div data-svg-wrapper>*/}
-      {/*        /!*<svg*!/*/}
-      {/*        /!*  width="360"*!/*/}
-      {/*        /!*  height="24"*!/*/}
-      {/*        /!*  viewBox="0 0 360 24"*!/*/}
-      {/*        /!*  fill="none"*!/*/}
-      {/*        /!*  xmlns="http://www.w3.org/2000/svg"*!/*/}
-      {/*        /!*>*!/*/}
-      {/*        /!*  <g opacity="0.8">*!/*/}
-      {/*        /!*    <path*!/*/}
-      {/*        /!*      d="M14.2 11L18 16H6L9 12.1L11.1 14.8L14 11H14.2ZM8.5 11C9.3 11 10 10.3 10 9.5C10 8.7 9.3 8 8.5 8C7.7 8 7 8.7 7 9.5C7 10.3 7.7 11 8.5 11ZM22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4H20C21.1 4 22 4.9 22 6ZM20 8.8V6H4V18H20V8.8Z"*!/*/}
-      {/*        /!*      fill="#999999"*!/*/}
-      {/*        /!*    />*!/*/}
-      {/*        /!*    <path*!/*/}
-      {/*        /!*      d="M39.578 10.059C40.2995 9.984 40.8575 10.1145 41.057 10.2135C41.1454 10.2612 41.2425 10.2906 41.3425 10.3C41.4425 10.3095 41.5434 10.2987 41.6391 10.2685C41.7349 10.2382 41.8236 10.189 41.9 10.1237C41.9764 10.0585 42.0389 9.97861 42.0838 9.88878C42.1287 9.79894 42.1551 9.70099 42.1615 9.60075C42.1678 9.50051 42.154 9.40001 42.1207 9.30523C42.0875 9.21044 42.0356 9.1233 41.968 9.04896C41.9005 8.97463 41.8187 8.91462 41.7275 8.8725C41.201 8.6085 40.3355 8.472 39.422 8.568C37.982 8.718 36.5 9.969 36.5 12.0135C36.5 14.091 38.081 15.4635 39.95 15.4635C40.82 15.4635 41.6 15.0555 42.0455 14.634C42.4385 14.262 42.5 13.7685 42.5 13.4595V12.0135C42.5 11.8146 42.421 11.6238 42.2803 11.4832C42.1397 11.3425 41.9489 11.2635 41.75 11.2635H40.5395C40.3406 11.2635 40.1498 11.3425 40.0092 11.4832C39.8685 11.6238 39.7895 11.8146 39.7895 12.0135C39.7895 12.2124 39.8685 12.4032 40.0092 12.5438C40.1498 12.6845 40.3406 12.7635 40.5395 12.7635H41V13.4595C41.0002 13.4952 40.9972 13.5308 40.991 13.566C40.6987 13.812 40.3319 13.9521 39.95 13.9635C38.8535 13.9635 38 13.206 38 12.0135C38 10.7865 38.8505 10.1355 39.578 10.059ZM45.5 9.315C45.5 9.11609 45.421 8.92532 45.2803 8.78467C45.1397 8.64402 44.9489 8.565 44.75 8.565C44.5511 8.565 44.3603 8.64402 44.2197 8.78467C44.079 8.92532 44 9.11609 44 9.315V14.715C44 14.9139 44.079 15.1047 44.2197 15.2453C44.3603 15.386 44.5511 15.465 44.75 15.465C44.9489 15.465 45.1397 15.386 45.2803 15.2453C45.421 15.1047 45.5 14.9139 45.5 14.715V9.315ZM47.75 8.565C47.5511 8.565 47.3603 8.64402 47.2197 8.78467C47.079 8.92532 47 9.11609 47 9.315V14.715C47 14.9139 47.079 15.1047 47.2197 15.2453C47.3603 15.386 47.5511 15.465 47.75 15.465C47.9489 15.465 48.1397 15.386 48.2803 15.2453C48.421 15.1047 48.5 14.9139 48.5 14.715V12.759L50.0045 12.75C50.2034 12.7488 50.3937 12.6686 50.5335 12.5271C50.6733 12.3857 50.7512 12.1944 50.75 11.9955C50.7488 11.7966 50.6686 11.6063 50.5271 11.4665C50.3857 11.3267 50.1944 11.2488 49.9955 11.25L48.5 11.259V10.0635H50.75C50.9489 10.0635 51.1397 9.98448 51.2803 9.84383C51.421 9.70318 51.5 9.51241 51.5 9.3135C51.5 9.11459 51.421 8.92382 51.2803 8.78317C51.1397 8.64252 50.9489 8.5635 50.75 8.5635L47.75 8.565ZM37.25 3C36.2554 3 35.3016 3.39509 34.5983 4.09835C33.8951 4.80161 33.5 5.75544 33.5 6.75V17.25C33.5 18.2446 33.8951 19.1984 34.5983 19.9017C35.3016 20.6049 36.2554 21 37.25 21H50.75C51.7446 21 52.6984 20.6049 53.4017 19.9017C54.1049 19.1984 54.5 18.2446 54.5 17.25V6.75C54.5 5.75544 54.1049 4.80161 53.4017 4.09835C52.6984 3.39509 51.7446 3 50.75 3H37.25ZM35 6.75C35 6.15326 35.2371 5.58097 35.659 5.15901C36.081 4.73705 36.6533 4.5 37.25 4.5H50.75C51.3467 4.5 51.919 4.73705 52.341 5.15901C52.7629 5.58097 53 6.15326 53 6.75V17.25C53 17.8467 52.7629 18.419 52.341 18.841C51.919 19.2629 51.3467 19.5 50.75 19.5H37.25C36.6533 19.5 36.081 19.2629 35.659 18.841C35.2371 18.419 35 17.8467 35 17.25V6.75Z"*!/*/}
-      {/*        /!*      fill="#999999"*!/*/}
-      {/*        /!*    />*!/*/}
-      {/*        /!*    <path*!/*/}
-      {/*        /!*      d="M75.991 3.00001C74.2114 3.00179 72.4722 3.53114 70.9933 4.52116C69.5145 5.51117 68.3623 6.9174 67.6825 8.56209C67.0027 10.2068 66.8258 12.0161 67.174 13.7613C67.5223 15.5066 68.3802 17.1094 69.6392 18.3671C70.8983 19.6249 72.5019 20.4812 74.2475 20.8277C75.9931 21.1743 77.8022 20.9955 79.4462 20.3141C81.0902 19.6326 82.4953 18.4791 83.4839 16.9992C84.4724 15.5194 85 13.7797 85 12C85.0006 10.8172 84.7679 9.64587 84.3152 8.55309C83.8626 7.46031 83.1989 6.46752 82.3621 5.63156C81.5253 4.7956 80.5318 4.13288 79.4386 3.68132C78.3454 3.22976 77.1738 2.99824 75.991 3.00001V3.00001ZM76 19C74.6155 19 73.2622 18.5895 72.111 17.8203C70.9599 17.0511 70.0627 15.9579 69.5328 14.6788C69.003 13.3997 68.8644 11.9922 69.1345 10.6344C69.4046 9.27651 70.0713 8.02923 71.0503 7.05026C72.0292 6.07129 73.2765 5.40461 74.6344 5.13451C75.9922 4.86442 77.3997 5.00304 78.6788 5.53285C79.9579 6.06267 81.0511 6.95987 81.8203 8.11102C82.5895 9.26216 83 10.6155 83 12C83.0003 12.9193 82.8194 13.8297 82.4677 14.6791C82.116 15.5285 81.6004 16.3003 80.9503 16.9503C80.3003 17.6004 79.5285 18.116 78.6791 18.4677C77.8297 18.8194 76.9193 19.0003 76 19V19ZM79.105 13.8H80.608C80.2464 14.728 79.6131 15.5252 78.7909 16.0873C77.9687 16.6493 76.996 16.95 76 16.95C75.0041 16.95 74.0313 16.6493 73.2091 16.0873C72.3869 15.5252 71.7536 14.728 71.392 13.8H72.895C73.2082 14.3469 73.6603 14.8014 74.2055 15.1175C74.7507 15.4335 75.3698 15.6 76 15.6C76.6302 15.6 77.2493 15.4335 77.7945 15.1175C78.3397 14.8014 78.7918 14.3469 79.105 13.8V13.8ZM71.5 9.75001C71.5 9.48301 71.5792 9.222 71.7275 8.99999C71.8759 8.77798 72.0867 8.60495 72.3334 8.50277C72.5801 8.40059 72.8515 8.37386 73.1134 8.42595C73.3753 8.47804 73.6158 8.60661 73.8046 8.79542C73.9934 8.98422 74.122 9.22476 74.1741 9.48664C74.2262 9.74851 74.1994 10.02 74.0972 10.2666C73.9951 10.5133 73.822 10.7242 73.6 10.8725C73.378 11.0208 73.117 11.1 72.85 11.1C72.492 11.1 72.1486 10.9578 71.8954 10.7046C71.6422 10.4514 71.5 10.1081 71.5 9.75001ZM77.8 9.75001C77.8 9.48301 77.8792 9.222 78.0275 8.99999C78.1759 8.77798 78.3867 8.60495 78.6334 8.50277C78.8801 8.40059 79.1515 8.37386 79.4134 8.42595C79.6753 8.47804 79.9158 8.60661 80.1046 8.79542C80.2934 8.98422 80.422 9.22476 80.4741 9.48664C80.5262 9.74851 80.4994 10.02 80.3972 10.2666C80.2951 10.5133 80.122 10.7242 79.9 10.8725C79.678 11.0208 79.417 11.1 79.15 11.1C78.792 11.1 78.4486 10.9578 78.1954 10.7046C77.9422 10.4514 77.8 10.1081 77.8 9.75001V9.75001Z"*!/*/}
-      {/*        /!*      fill="#999999"*!/*/}
-      {/*        /!*    />*!/*/}
-      {/*        /!*  </g>*!/*/}
-      {/*        /!*</svg>*!/*/}
-      {/*      </div>*/}
-      {/*<div className="flex items-center justify-center gap-2.5 rounded-lg border border-[#454545] bg-[#1e1e1e] px-4 py-2">*/}
-      {/*  <div className="font-['Inter'] text-xs font-normal leading-[17px] text-white">*/}
-      {/*    Post*/}
-      {/*  </div>*/}
-      {/*</div>*/}
-      {/*    </div>*/}
-      {/*  </div>*/}
-      {/*</div>*/}
-    </>
+    </div>
   );
 };

@@ -1,43 +1,39 @@
+// src/components/Feed.tsx
 "use client";
 import React, { ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { FeedData, fetchFeed } from "../lib/api/Feed";
-import Thread from "./Thread";
+import { fetchFeed } from "../lib/api/Feed";
+import { ThreadProps } from "../lib/api/Thread";
+import { Thread } from "./Thread";
 
-// Типизируем компонент, добавляя children
 interface FeedProps {
   children?: ReactNode;
 }
 
-const Feed: React.FC<FeedProps> = ({ children }) => {
-  const { data, error, isLoading } = useQuery<FeedData[]>({
-    queryKey: ["feed"], // передаем queryKey как объект с обязательным полем queryKey
-    queryFn: fetchFeed, // функция запроса
+export function Feed({ children }: FeedProps) {
+  const {
+    data: feedData,
+    error,
+    isLoading,
+  } = useQuery<ThreadProps[]>({
+    queryKey: ["threads"],
+    queryFn: fetchFeed,
+    refetchOnWindowFocus: false,
+    refetchInterval: 10_000,
   });
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error instanceof Error) {
-    return <div>Error: {error.message}</div>;
-  }
+  if (isLoading) return <div>Loading...</div>;
+  if (error instanceof Error) return <div>Error: {error.message}</div>;
 
   return (
-    <div className="mx-auto h-screen w-1/2 bg-bgDark">
-      {children} {/* Здесь выводим переданные дочерние элементы */}
-      {/*<div className="feed">*/}
-      {/*  {data?.map((thread: FeedData) => (*/}
-      {/*    <Thread*/}
-      {/*      key={thread._id}*/}
-      {/*      text={thread.text}*/}
-      {/*      messageCount={thread.messageCount}*/}
-      {/*      likeCount={thread.likeCount}*/}
-      {/*    />*/}
-      {/*  ))}*/}
-      {/*</div>*/}
+    <div className="mx-auto w-1/2 overflow-y-auto bg-bgDark">
+      {children}
+
+      <div>
+        {feedData?.map((thread) => <Thread key={thread._id} thread={thread} />)}
+      </div>
     </div>
   );
-};
+}
 
 export default Feed;
