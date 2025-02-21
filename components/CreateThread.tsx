@@ -18,7 +18,7 @@ export const CreateThread = () => {
         textAreaRef.current.style.height = "auto";
       }
       console.log("Успешно создан тред с ID:", data.id);
-      queryClient.invalidateQueries({ queryKey: ["threads"] });
+      void queryClient.invalidateQueries({ queryKey: ["threads"] });
     },
     onError: (error: Error) => {
       console.error("Ошибка при создании треда:", error);
@@ -38,7 +38,7 @@ export const CreateThread = () => {
   };
 
   const handlePost = () => {
-    if (!text.trim()) return;
+    if (!text.trim() || isPending) return;
     mutate(text);
   };
 
@@ -73,8 +73,9 @@ export const CreateThread = () => {
             <button
               type="button"
               onClick={handlePost}
+              disabled={isPending || !text.trim()}
               className={
-                text
+                text && !isPending
                   ? "bg-primaryGreen text-bgDarker h-[33px] w-[58px] rounded-[8px] text-center font-inter text-xs leading-xs"
                   : "h-[33px] w-[58px] rounded-[8px] border border-borderColor bg-bgLighter text-center font-inter text-xs leading-xs text-textWhite"
               }
