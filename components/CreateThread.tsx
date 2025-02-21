@@ -53,7 +53,7 @@ export const CreateThread = () => {
       <div className="flex gap-3 p-4">
         {/* Аватар или иконка пользователя */}
         <div>
-          <div className="h-9 w-9 rounded-full bg-blue-600" />
+          <div className="h-9 w-9 rounded-full bg-[#999999]" />
         </div>
 
         {/* Блок с textarea и кнопкой */}

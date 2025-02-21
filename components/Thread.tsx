@@ -69,7 +69,7 @@ export const Thread: React.FC<ThreadComponentProps> = ({ thread }) => {
   return (
     <div className="flex min-h-[96px] w-full gap-x-[12px] border-b-[1px] border-borderColor p-[16px]">
       <div>
-        <div className="h-[36px] w-[36px] rounded-full bg-blue-600" />
+        <div className="h-[36px] w-[36px] rounded-full bg-[#999999]" />
       </div>
 
       <div className="flex flex-col gap-y-[12px]">
