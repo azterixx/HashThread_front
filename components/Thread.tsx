@@ -1,7 +1,6 @@
 import React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toggleLikeThread, ThreadProps } from "../lib/api/Thread";
-
 import FlameIcon from "./icons/FlameIcon";
 import ShareIcon from "./icons/ShareIcon";
 import MessageIcon from "./icons/MessageIcon";
@@ -24,12 +23,8 @@ export const Thread: React.FC<ThreadComponentProps> = ({ thread }) => {
   const { mutate, isPending: isMutating } = useMutation({
     mutationFn: () => toggleLikeThread(thread._id),
     onMutate: async () => {
-      // Останавливаем запросы для ключа ["threads"]
       await queryClient.cancelQueries({ queryKey: ["threads"] });
-      // Сохраняем текущие данные
       const previousData = queryClient.getQueryData<ThreadProps[]>(["threads"]);
-
-      // Оптимистически обновляем likeCount и isLiked
       queryClient.setQueryData<ThreadProps[]>(["threads"], (oldData) =>
         oldData?.map((t) =>
           t._id === thread._id
@@ -41,17 +36,14 @@ export const Thread: React.FC<ThreadComponentProps> = ({ thread }) => {
             : t,
         ),
       );
-
       return { previousData };
     },
     onError: (err, vars, context) => {
-      // В случае ошибки восстанавливаем
       if (context?.previousData) {
         queryClient.setQueryData(["threads"], context.previousData);
       }
     },
     onSuccess: (data) => {
-      // Если сервер вернул обновлённые данные, синхронизируем
       queryClient.setQueryData<ThreadProps[]>(["threads"], (oldData) =>
         oldData?.map((t) =>
           t._id === thread._id
@@ -67,7 +59,10 @@ export const Thread: React.FC<ThreadComponentProps> = ({ thread }) => {
   });
 
   return (
-    <div className="flex min-h-[96px] w-full gap-x-[12px] border-b-[1px] border-borderColor p-[16px]">
+    <div
+      // Вот тут добавляем класс анимации
+      className="animate-fadeIn flex min-h-[96px] w-full gap-x-[12px] border-b-[1px] border-borderColor p-[16px]"
+    >
       <div>
         <div className="h-[36px] w-[36px] rounded-full bg-[#999999]" />
       </div>
@@ -98,9 +93,7 @@ export const Thread: React.FC<ThreadComponentProps> = ({ thread }) => {
 
           <ActionButton>
             <MessageIcon />
-            <span
-              className={"font-inter text-xs font-xs leading-xs text-textGray"}
-            >
+            <span className="font-inter text-xs font-xs leading-xs text-textGray">
               {formatCount(thread.messageCount)}
             </span>
           </ActionButton>

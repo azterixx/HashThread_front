@@ -10,6 +10,7 @@ export default {
   ],
   theme: {
     extend: {
+      // Ваши уже существующие настройки:
       fontFamily: {
         inter: ["var(--font-inter)"],
       },
@@ -36,6 +37,17 @@ export default {
         bgLighter: "#1E1E1E",
         textGray: "#999",
         textWhite: "#F3F5F7",
+      },
+
+      // Добавляем ключевые кадры и анимацию:
+      keyframes: {
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+      },
+      animation: {
+        fadeIn: "fadeIn 0.7s ease-in-out forwards",
       },
     },
   },
