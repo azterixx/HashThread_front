@@ -2,7 +2,7 @@ import React from "react";
 
 export function FeedSkeleton() {
   // Допустим, что нужно отобразить 5 "скелетонов"
-  const skeletonCount = 5;
+  const skeletonCount = 8;
 
   return (
     <div className="space-y-2">
