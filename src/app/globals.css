@@ -24,3 +24,38 @@ body {
     word-break: break-word;
   }
 }
+
+/*!* Стандартная ширина/высота скроллбара *!*/
+/*::-webkit-scrollbar {*/
+/*  width: 12px;               !* Толщина вертикального скроллбара *!*/
+/*  height: 12px;              !* Толщина горизонтального скроллбара *!*/
+/*  background-color: #f0f0f0; !* Фон (дорожка) скроллбара *!*/
+/*}*/
+
+/*!* Ползунок (thumb) *!*/
+/*::-webkit-scrollbar-thumb {*/
+/*  background-color: #888;    !* Цвет ползунка *!*/
+/*  border-radius: 6px;        !* Скругление углов ползунка *!*/
+/*  border: 2px solid #f0f0f0; !* Можно добавить границу, чтобы был эффект «внутри трека» *!*/
+/*}*/
+
+/*!* Ползунок при наведении *!*/
+/*::-webkit-scrollbar-thumb:hover {*/
+/*  background-color: #555;*/
+/*}*/
+
+/*!* Дорожка (track) *!*/
+/*::-webkit-scrollbar-track {*/
+/*  background-color: #fff;    !* Цвет трека (если нужен контраст) *!*/
+/*  border-radius: 6px;        !* Скругление краёв трека (не всегда заметно) *!*/
+/*}*/
+
+/*!* Кнопки (стрелки) на краях скроллбара *!*/
+/*::-webkit-scrollbar-button {*/
+/*  background-color: #ccc;*/
+/*}*/
+
+/*!* Уголок между горизонтальным и вертикальным скроллбаром *!*/
+/*::-webkit-scrollbar-corner {*/
+/*  background-color: #999;*/
+/*}*/
