@@ -7,10 +7,9 @@ import { cn } from "@/lib/utils";
 const buttonVariants = cva("flex items-center justify-center", {
   variants: {
     variant: {
-      default:
-        "bg-bgLighter text-primary-foreground rounded-[16px]",
-      destructive:
-        "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+      default: "bg-bgLighter text-primary-foreground rounded-[16px]",
+      create:
+        "h-[33px] w-[58px] rounded-[8px] border border-borderColor bg-bgLighter text-center font-inter text-xs leading-xs text-textWhite",
       outline:
         "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
       secondary:
