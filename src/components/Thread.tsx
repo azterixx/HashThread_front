@@ -1,11 +1,11 @@
 import React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toggleLikeThread, ThreadProps } from "../lib/api/Thread";
-import FlameIcon from "./icons/FlameIcon";
-import ShareIcon from "./icons/ShareIcon";
-import MessageIcon from "./icons/MessageIcon";
+import { toggleLikeThread, ThreadProps } from "@/shared/api/Thread";
+import FlameIcon from "../icons/FlameIcon";
+import ShareIcon from "../icons/ShareIcon";
+import MessageIcon from "../icons/MessageIcon";
 import { ActionButton } from "./ActionButton";
-import BurningFlameIcon from "./icons/BurningFlameIcon";
+import BurningFlameIcon from "../icons/BurningFlameIcon";
 
 function formatCount(count: number) {
   if (count === 0) return "";
@@ -61,7 +61,7 @@ export const Thread: React.FC<ThreadComponentProps> = ({ thread }) => {
   return (
     <div
       // Вот тут добавляем класс анимации
-      className="animate-fadeIn flex min-h-[96px] w-full gap-x-[12px] border-b-[1px] border-borderColor p-[16px]"
+      className="flex min-h-[96px] w-full animate-fadeIn gap-x-[12px] border-b-[1px] border-borderColor p-[16px]"
     >
       <div>
         <div className="h-[36px] w-[36px] rounded-full bg-[#999999]" />
@@ -83,7 +83,7 @@ export const Thread: React.FC<ThreadComponentProps> = ({ thread }) => {
             <span
               className={
                 thread.isLiked
-                  ? "text-primaryGreen font-inter text-xs font-xs leading-xs"
+                  ? "font-inter text-xs font-xs leading-xs text-primaryGreen"
                   : "font-inter text-xs font-xs leading-xs text-textGray"
               }
             >

@@ -1,3 +1,12 @@
+import { CreateThread } from "@/components/CreateThread";
+import Feed from "@/components/Feed";
+
 export default function Home() {
-  return;
+  return (
+    <>
+      <Feed>
+        <CreateThread />
+      </Feed>
+    </>
+  );
 }

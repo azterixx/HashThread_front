@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postThread, PostThreadResponse } from "../lib/api/Thread";
+import { postThread, PostThreadResponse } from "@/shared/api/Thread"; 
 
 export const CreateThread = () => {
   const [text, setText] = useState("");
