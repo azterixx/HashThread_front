@@ -1,9 +1,9 @@
 "use client";
-
 import React, { useState, useRef, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postThread, PostThreadResponse } from "@/shared/api/Thread"; 
-
+import { postThread, PostThreadResponse } from "@/shared/api/Thread";
+import { Button } from "./ui/button";
+import { cn } from "@/lib/utils";
 export const CreateThread = () => {
   const [text, setText] = useState("");
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -63,25 +63,25 @@ export const CreateThread = () => {
         <div className="flex w-full flex-col gap-3">
           <textarea
             ref={textAreaRef}
-            className="caret-primaryGreen w-full resize-none overflow-hidden rounded-md border border-transparent bg-bgDark p-2 font-inter text-m leading-m text-textGray focus:outline-none"
+            className="w-full resize-none overflow-hidden rounded-md border border-transparent bg-bgDark p-2 font-inter text-m leading-m text-textGray caret-primaryGreen focus:outline-none"
             placeholder="Type something interesting here"
             value={text}
             onChange={handleChange}
             rows={1}
           />
           <div className="flex w-full justify-end">
-            <button
-              type="button"
+            <Button
+              variant={"create"}
               onClick={handlePost}
               disabled={isPending || !text.trim()}
-              className={
-                text && !isPending
-                  ? "bg-primaryGreen text-bgDarker h-[33px] w-[58px] rounded-[8px] text-center font-inter text-xs leading-xs"
-                  : "h-[33px] w-[58px] rounded-[8px] border border-borderColor bg-bgLighter text-center font-inter text-xs leading-xs text-textWhite"
-              }
+              className={cn(
+                text &&
+                  !isPending &&
+                  "h-[33px] w-[58px] rounded-[8px] bg-primaryGreen text-center font-inter text-xs leading-xs text-bgDarker",
+              )}
             >
               {isPending ? "..." : "Post"}
-            </button>
+            </Button>
           </div>
         </div>
       </div>
