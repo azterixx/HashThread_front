@@ -2,7 +2,7 @@
 import React, { useState, useRef, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postThread, PostThreadResponse } from "@/shared/api/Thread";
-import { Button } from "./ui/button";
+import { Button, Textarea } from "./ui";
 import { cn } from "@/lib/utils";
 export const CreateThread = () => {
   const [text, setText] = useState("");
@@ -61,9 +61,8 @@ export const CreateThread = () => {
 
         {/* Блок с textarea и кнопкой */}
         <div className="flex w-full flex-col gap-3">
-          <textarea
+          <Textarea
             ref={textAreaRef}
-            className="w-full resize-none overflow-hidden rounded-md border border-transparent bg-bgDark p-2 font-inter text-m leading-m text-textGray caret-primaryGreen focus:outline-none"
             placeholder="Type something interesting here"
             value={text}
             onChange={handleChange}
