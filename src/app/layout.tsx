@@ -1,9 +1,7 @@
 import "./globals.css";
-import { NavBar } from "../../components/NavBar";
-import { CreateThread } from "../../components/CreateThread";
+import { NavBar } from "../components/NavBar";
 import { Inter } from "next/font/google";
-import Feed from "../../components/Feed";
-import { TanstackProvider } from "../../components/providers/tanstack-provider";
+import { TanstackProvider } from "./providers/tanstack-provider";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -23,9 +21,7 @@ export default function RootLayout({
       <body className={"antialiased"}>
         <TanstackProvider>
           <NavBar />
-          <Feed>
-            <CreateThread />
-          </Feed>
+          {children}
         </TanstackProvider>
       </body>
     </html>

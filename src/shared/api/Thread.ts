@@ -1,4 +1,4 @@
-import { API_URL } from "../constants";
+import { API_URL } from "../constants/constants";
 
 export interface ThreadProps {
   _id: string;

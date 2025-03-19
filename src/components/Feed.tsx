@@ -2,8 +2,8 @@
 "use client";
 import React, { ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchFeed } from "../lib/api/Feed";
-import { ThreadProps } from "../lib/api/Thread";
+import { fetchFeed } from "@/shared/api/Feed"; 
+import { ThreadProps } from "@/shared/api/Thread";
 import { Thread } from "./Thread";
 import { FeedSkeleton } from "./FeedSkeleton";
 

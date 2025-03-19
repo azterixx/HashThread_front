@@ -1,5 +1,5 @@
 import { ThreadProps } from "./Thread";
-import { API_URL } from "../constants";
+import { API_URL } from "../constants/constants";
 
 export async function fetchFeed(): Promise<ThreadProps[]> {
   const response = await fetch(`${API_URL}/feed`, {
