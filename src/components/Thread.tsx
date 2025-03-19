@@ -4,8 +4,8 @@ import { toggleLikeThread, ThreadProps } from "@/shared/api/Thread";
 import FlameIcon from "../icons/FlameIcon";
 import ShareIcon from "../icons/ShareIcon";
 import MessageIcon from "../icons/MessageIcon";
-import { ActionButton } from "./ActionButton";
 import BurningFlameIcon from "../icons/BurningFlameIcon";
+import { Button } from "./ui/button";
 
 function formatCount(count: number) {
   if (count === 0) return "";
@@ -78,7 +78,7 @@ export const Thread: React.FC<ThreadComponentProps> = ({ thread }) => {
         </div>
 
         <div className="flex h-[32px] w-full gap-x-[4px]">
-          <ActionButton onClick={() => mutate()} disabled={isMutating}>
+          <Button onClick={() => mutate()} disabled={isMutating}>
             {thread.isLiked ? <BurningFlameIcon /> : <FlameIcon />}
             <span
               className={
@@ -89,18 +89,18 @@ export const Thread: React.FC<ThreadComponentProps> = ({ thread }) => {
             >
               {formatCount(thread.likeCount)}
             </span>
-          </ActionButton>
+          </Button>
 
-          <ActionButton>
+          <Button>
             <MessageIcon />
             <span className="font-inter text-xs font-xs leading-xs text-textGray">
               {formatCount(thread.messageCount)}
             </span>
-          </ActionButton>
+          </Button>
 
-          <ActionButton>
+          <Button>
             <ShareIcon />
-          </ActionButton>
+          </Button>
         </div>
       </div>
     </div>
