@@ -76,7 +76,7 @@ export const CreateThread = () => {
               className={cn(
                 text &&
                   !isPending &&
-                  "h-[33px] w-[58px] rounded-[8px] bg-primaryGreen text-center font-inter text-xs leading-xs text-bgDarker",
+                  "bg-primaryGreen text-bgDarker",
               )}
             >
               {isPending ? "..." : "Post"}
