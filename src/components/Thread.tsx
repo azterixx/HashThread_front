@@ -1,11 +1,16 @@
-import React from "react";
+"use client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toggleLikeThread, ThreadProps } from "@/shared/api/Thread";
+import { toggleLikeThread } from "@/shared/api/Thread";
 import FlameIcon from "../icons/FlameIcon";
 import ShareIcon from "../icons/ShareIcon";
 import MessageIcon from "../icons/MessageIcon";
 import BurningFlameIcon from "../icons/BurningFlameIcon";
 import { Button } from "./ui/button";
+import { ThreadProps } from "@/shared/api/types/types";
+import { useState } from "react";
+import { Textarea } from "./ui";
+import { useAutoResizeTextarea } from "@/lib/hooks/useAutoResizeTextarea";
+import { Comments } from "./Comments";
 
 function formatCount(count: number) {
   if (count === 0) return "";
@@ -17,7 +22,13 @@ interface ThreadComponentProps {
   thread: ThreadProps;
 }
 
-export const Thread: React.FC<ThreadComponentProps> = ({ thread }) => {
+export const Thread = ({ thread }: ThreadComponentProps) => {
+  const [isComments, setIsComments] = useState(false);
+  const [comments, setComments] = useState<
+    { threadId: string; text: string }[]
+  >([]);
+  const { textAreaRef, text, setText, handleChange } = useAutoResizeTextarea();
+
   const queryClient = useQueryClient();
 
   const { mutate, isPending: isMutating } = useMutation({
@@ -57,17 +68,18 @@ export const Thread: React.FC<ThreadComponentProps> = ({ thread }) => {
       );
     },
   });
+  const createComment = () => {
+    setComments((prev) => [...prev, { threadId: thread._id, text }]);
+    setText("");
+  };
 
   return (
     <div
       // Вот тут добавляем класс анимации
-      className="flex min-h-[96px] w-full animate-fadeIn gap-x-[12px] border-b-[1px] border-borderColor p-[16px]"
+      className="flex min-h-[96px] w-full animate-fadeIn flex-col gap-[15px] border-b-[1px] border-borderColor p-[16px]"
     >
-      <div>
+      <div className="flex gap-x-[12px]">
         <div className="h-[36px] w-[36px] rounded-full bg-[#999999]" />
-      </div>
-
-      <div className="flex flex-col gap-y-[12px]">
         <div className="flex flex-col gap-y-[6px]">
           <span className="inline-block h-[19px] font-inter font-mMedium leading-mMedium text-textWhite">
             Anonym
@@ -76,7 +88,9 @@ export const Thread: React.FC<ThreadComponentProps> = ({ thread }) => {
             {thread.text}
           </p>
         </div>
+      </div>
 
+      <div className="flex flex-col gap-y-[12px]">
         <div className="flex h-[32px] w-full gap-x-[4px]">
           <Button onClick={() => mutate()} disabled={isMutating}>
             {thread.isLiked ? <BurningFlameIcon /> : <FlameIcon />}
@@ -91,10 +105,19 @@ export const Thread: React.FC<ThreadComponentProps> = ({ thread }) => {
             </span>
           </Button>
 
-          <Button>
-            <MessageIcon />
+          <Button
+            onClick={() => {
+              setIsComments(!isComments);
+              setText("");
+            }}
+          >
+            {isComments ? (
+              <span className="text-textGray">X</span>
+            ) : (
+              <MessageIcon />
+            )}
             <span className="font-inter text-xs font-xs leading-xs text-textGray">
-              {formatCount(thread.messageCount)}
+              {formatCount(comments.length)}
             </span>
           </Button>
 
@@ -103,6 +126,33 @@ export const Thread: React.FC<ThreadComponentProps> = ({ thread }) => {
           </Button>
         </div>
       </div>
+
+      {isComments && (
+        <>
+          <div className="flex w-full flex-col gap-3 border-b-2 border-borderColor pb-3">
+            <Textarea
+              className=""
+              ref={textAreaRef}
+              onChange={handleChange}
+              placeholder="Comment"
+              rows={1}
+              value={text}
+            />
+            <div className="flex w-full justify-end">
+              <Button onClick={createComment} variant={"create"}>
+                Create
+              </Button>
+            </div>
+          </div>
+          <div className="flex flex-col gap-5">
+            {comments
+              .filter((item) => item.threadId === thread._id)
+              .map((item) => (
+                <Comments key={item.text} text={item.text} />
+              ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };

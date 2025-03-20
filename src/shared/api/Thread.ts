@@ -1,12 +1,6 @@
 import { API_URL } from "../constants/constants";
+import { PostThreadResponse } from "./types/types";
 
-export interface ThreadProps {
-  _id: string;
-  text: string;
-  messageCount: number;
-  likeCount: number;
-  isLiked: boolean;
-}
 
 export async function toggleLikeThread(threadId: string) {
   const res = await fetch(`${API_URL}/thread/${threadId}/like`, {
@@ -22,10 +16,6 @@ export async function toggleLikeThread(threadId: string) {
   return res.json() as Promise<{ likeCount: number; isLiked: boolean }>;
 }
 
-export interface PostThreadResponse {
-  id: number;
-  text: string;
-}
 
 /**
  * Функция, отправляющая POST-запрос на создание треда

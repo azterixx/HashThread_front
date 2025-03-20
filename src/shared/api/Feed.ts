@@ -1,4 +1,4 @@
-import { ThreadProps } from "./Thread";
+import { ThreadProps } from "./types/types";
 import { API_URL } from "../constants/constants";
 
 export async function fetchFeed(): Promise<ThreadProps[]> {
