@@ -10,3 +10,8 @@ export interface PostThreadResponse {
   id: number;
   text: string;
 }
+export interface PostCommentsResponse {
+  text: string;
+  messageNumber: number;
+  threadId: string;
+}

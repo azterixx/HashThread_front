@@ -1,16 +1,18 @@
 "use client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toggleLikeThread } from "@/shared/api/Thread";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import FlameIcon from "../icons/FlameIcon";
 import ShareIcon from "../icons/ShareIcon";
 import MessageIcon from "../icons/MessageIcon";
 import BurningFlameIcon from "../icons/BurningFlameIcon";
 import { Button } from "./ui/button";
-import { ThreadProps } from "@/shared/api/types/types";
+import { PostCommentsResponse, ThreadProps } from "@/shared/api/types/types";
 import { useState } from "react";
 import { Textarea } from "./ui";
 import { useAutoResizeTextarea } from "@/lib/hooks/useAutoResizeTextarea";
 import { Comments } from "./Comments";
+import { useToggleLike } from "@/lib/hooks/useToggleLike";
+import { getComments, postComment } from "@/shared/api/Comment";
+import { FeedSkeleton } from "./FeedSkeleton";
 
 function formatCount(count: number) {
   if (count === 0) return "";
@@ -24,54 +26,33 @@ interface ThreadComponentProps {
 
 export const Thread = ({ thread }: ThreadComponentProps) => {
   const [isComments, setIsComments] = useState(false);
-  const [comments, setComments] = useState<
-    { threadId: string; text: string }[]
-  >([]);
   const { textAreaRef, text, setText, handleChange } = useAutoResizeTextarea();
-
+  const { mutate: toggleLike, isPending } = useToggleLike(thread._id);
   const queryClient = useQueryClient();
 
-  const { mutate, isPending: isMutating } = useMutation({
-    mutationFn: () => toggleLikeThread(thread._id),
-    onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["threads"] });
-      const previousData = queryClient.getQueryData<ThreadProps[]>(["threads"]);
-      queryClient.setQueryData<ThreadProps[]>(["threads"], (oldData) =>
-        oldData?.map((t) =>
-          t._id === thread._id
-            ? {
-                ...t,
-                isLiked: !t.isLiked,
-                likeCount: t.isLiked ? t.likeCount - 1 : t.likeCount + 1,
-              }
-            : t,
-        ),
-      );
-      return { previousData };
-    },
-    onError: (err, vars, context) => {
-      if (context?.previousData) {
-        queryClient.setQueryData(["threads"], context.previousData);
-      }
-    },
-    onSuccess: (data) => {
-      queryClient.setQueryData<ThreadProps[]>(["threads"], (oldData) =>
-        oldData?.map((t) =>
-          t._id === thread._id
-            ? {
-                ...t,
-                isLiked: data.isLiked,
-                likeCount: data.likeCount,
-              }
-            : t,
-        ),
-      );
+  const { mutate } = useMutation({
+    mutationFn: () => postComment(thread._id, text),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["comments", thread._id],
+      });
+      setText("");
     },
   });
+
   const createComment = () => {
-    setComments((prev) => [...prev, { threadId: thread._id, text }]);
-    setText("");
+    if (!text.trim()) return;
+    mutate();
   };
+  const {
+    data: commentsData,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: ["comments", thread._id],
+    queryFn: () => getComments(thread._id),
+  });
+  if (isLoading) return <FeedSkeleton />;
 
   return (
     <div
@@ -92,7 +73,7 @@ export const Thread = ({ thread }: ThreadComponentProps) => {
 
       <div className="flex flex-col gap-y-[12px]">
         <div className="flex h-[32px] w-full gap-x-[4px]">
-          <Button onClick={() => mutate()} disabled={isMutating}>
+          <Button onClick={() => toggleLike()} disabled={isPending}>
             {thread.isLiked ? <BurningFlameIcon /> : <FlameIcon />}
             <span
               className={
@@ -117,7 +98,7 @@ export const Thread = ({ thread }: ThreadComponentProps) => {
               <MessageIcon />
             )}
             <span className="font-inter text-xs font-xs leading-xs text-textGray">
-              {formatCount(comments.length)}
+              {formatCount(commentsData?.length ?? 0)}
             </span>
           </Button>
 
@@ -145,11 +126,9 @@ export const Thread = ({ thread }: ThreadComponentProps) => {
             </div>
           </div>
           <div className="flex flex-col gap-5">
-            {comments
-              .filter((item) => item.threadId === thread._id)
-              .map((item) => (
-                <Comments key={item.text} text={item.text} />
-              ))}
+            {commentsData
+              ?.filter((item) => item.threadId === thread._id)
+              ?.map((item) => <Comments key={item.text} text={item.text} />)}
           </div>
         </>
       )}

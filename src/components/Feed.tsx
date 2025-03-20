@@ -3,7 +3,7 @@
 import React, { ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchFeed } from "@/shared/api/Feed"; 
-import { ThreadProps } from "@/shared/api/Thread";
+import { ThreadProps } from "@/shared/api/types/types"; 
 import { Thread } from "./Thread";
 import { FeedSkeleton } from "./FeedSkeleton";
 
