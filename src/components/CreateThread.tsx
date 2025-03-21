@@ -1,7 +1,6 @@
 "use client";
-import React, { useState, useRef, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postThread } from "@/shared/api/Thread";
+import { postThread } from "@/shared/api/Thread/api";
 import { Button, Textarea } from "./ui";
 import { cn } from "@/lib/utils";
 import { PostThreadResponse } from "@/shared/api/types/types";

@@ -1,4 +1,4 @@
-import { toggleLikeThread } from "@/shared/api/Thread";
+import { toggleLikeThread } from "@/shared/api/Thread/api";
 import { ThreadProps } from "@/shared/api/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 

@@ -5,13 +5,13 @@ import ShareIcon from "../icons/ShareIcon";
 import MessageIcon from "../icons/MessageIcon";
 import BurningFlameIcon from "../icons/BurningFlameIcon";
 import { Button } from "./ui/button";
-import { PostCommentsResponse, ThreadProps } from "@/shared/api/types/types";
+import { ThreadProps } from "@/shared/api/types/types";
 import { useState } from "react";
 import { Textarea } from "./ui";
 import { useAutoResizeTextarea } from "@/lib/hooks/useAutoResizeTextarea";
 import { Comments } from "./Comments";
 import { useToggleLike } from "@/lib/hooks/useToggleLike";
-import { getComments, postComment } from "@/shared/api/Comment";
+import { getComments, postComment } from "@/shared/api/Comments/api";
 import { FeedSkeleton } from "./FeedSkeleton";
 
 function formatCount(count: number) {
