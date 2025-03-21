@@ -19,7 +19,6 @@ export function Feed({ children }: FeedProps) {
   } = useQuery<ThreadProps[]>({
     queryKey: ["threads"],
     queryFn: fetchFeed,
-    refetchOnWindowFocus: true,
     refetchInterval: 10_000,
   });
 
@@ -31,7 +30,7 @@ export function Feed({ children }: FeedProps) {
       </div>
     );
   }
-  if (error instanceof Error) return <div>Error: {error.message}</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <div className="mx-auto w-1/2 overflow-y-auto bg-bgDark">

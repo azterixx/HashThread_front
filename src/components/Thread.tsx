@@ -9,21 +9,14 @@ import { ThreadProps } from "@/shared/api/types/types";
 import { useState } from "react";
 import { Textarea } from "./ui";
 import { useAutoResizeTextarea } from "@/lib/hooks/useAutoResizeTextarea";
-import { Comments } from "./Comments";
 import { useToggleLike } from "@/lib/hooks/useToggleLike";
 import { getComments, postComment } from "@/shared/api/Comments/api";
-import { FeedSkeleton } from "./FeedSkeleton";
-
-function formatCount(count: number) {
-  if (count === 0) return "";
-  if (count >= 1000) return `${Math.floor(count / 1000)}k`;
-  return String(count);
-}
+import { CommentList } from "./CommentList";
+import { cn, formatCount } from "@/lib/utils";
 
 interface ThreadComponentProps {
   thread: ThreadProps;
 }
-
 export const Thread = ({ thread }: ThreadComponentProps) => {
   const [isComments, setIsComments] = useState(false);
   const { textAreaRef, text, setText, handleChange } = useAutoResizeTextarea();
@@ -39,21 +32,20 @@ export const Thread = ({ thread }: ThreadComponentProps) => {
       setText("");
     },
   });
+  const { data: commentsData } = useQuery({
+    queryKey: ["comments", thread._id],
+    queryFn: () => getComments(thread._id),
+  });
 
   const createComment = () => {
     if (!text.trim()) return;
     mutate();
   };
-  const {
-    data: commentsData,
-    error,
-    isLoading,
-  } = useQuery({
-    queryKey: ["comments", thread._id],
-    queryFn: () => getComments(thread._id),
-  });
-  if (isLoading) return <FeedSkeleton />;
 
+  const toogleComment = () => {
+    setIsComments(!isComments);
+    setText("");
+  };
   return (
     <div
       // Вот тут добавляем класс анимации
@@ -73,25 +65,20 @@ export const Thread = ({ thread }: ThreadComponentProps) => {
 
       <div className="flex flex-col gap-y-[12px]">
         <div className="flex h-[32px] w-full gap-x-[4px]">
+          {/* лайк */}
           <Button onClick={() => toggleLike()} disabled={isPending}>
             {thread.isLiked ? <BurningFlameIcon /> : <FlameIcon />}
             <span
-              className={
-                thread.isLiked
-                  ? "font-inter text-xs font-xs leading-xs text-primaryGreen"
-                  : "font-inter text-xs font-xs leading-xs text-textGray"
-              }
+              className={cn(
+                thread.isLiked &&
+                  "font-inter text-xs font-xs leading-xs text-primaryGreen",
+              )}
             >
               {formatCount(thread.likeCount)}
             </span>
           </Button>
-
-          <Button
-            onClick={() => {
-              setIsComments(!isComments);
-              setText("");
-            }}
-          >
+          {/* коммент */}
+          <Button onClick={toogleComment}>
             {isComments ? (
               <span className="text-textGray">X</span>
             ) : (
@@ -101,7 +88,7 @@ export const Thread = ({ thread }: ThreadComponentProps) => {
               {formatCount(commentsData?.length ?? 0)}
             </span>
           </Button>
-
+            {/* поделится  */}
           <Button>
             <ShareIcon />
           </Button>
@@ -125,11 +112,7 @@ export const Thread = ({ thread }: ThreadComponentProps) => {
               </Button>
             </div>
           </div>
-          <div className="flex flex-col gap-5">
-            {commentsData
-              ?.filter((item) => item.threadId === thread._id)
-              ?.map((item) => <Comments key={item.text} text={item.text} />)}
-          </div>
+          <CommentList commentsData={commentsData} threadId={thread._id} />
         </>
       )}
     </div>
