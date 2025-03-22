@@ -6,9 +6,7 @@ interface TanstackProviderProps {
 }
 const queryClient = new QueryClient();
 
-export const TanstackProvider: React.FC<TanstackProviderProps> = ({
-  children,
-}) => {
+export const TanstackProvider = ({ children }: TanstackProviderProps) => {
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );

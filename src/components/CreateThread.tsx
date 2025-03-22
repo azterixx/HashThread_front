@@ -2,25 +2,21 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postThread } from "@/shared/api/Thread/api";
 import { Button, Textarea } from "./ui";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 import { PostThreadResponse } from "@/shared/api/types/types";
-import { useAutoResizeTextarea } from "@/lib/hooks/useAutoResizeTextarea";
+import { useAutoResizeTextarea } from "@/shared/lib/hooks/useAutoResizeTextarea";
 export const CreateThread = () => {
   const queryClient = useQueryClient();
   const { textAreaRef, text, setText, handleChange } = useAutoResizeTextarea();
 
   const { mutate, isPending } = useMutation<PostThreadResponse, Error, string>({
     mutationFn: postThread,
-    onSuccess: (data: PostThreadResponse) => {
+    onSuccess: () => {
       setText("");
       if (textAreaRef.current) {
         textAreaRef.current.style.height = "auto";
       }
-      console.log("Успешно создан тред с ID:", data.id);
-      void queryClient.invalidateQueries({ queryKey: ["threads"] });
-    },
-    onError: (error: Error) => {
-      console.error("Ошибка при создании треда:", error);
+      queryClient.invalidateQueries({ queryKey: ["threads"] });
     },
   });
 

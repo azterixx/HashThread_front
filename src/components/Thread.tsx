@@ -8,11 +8,11 @@ import { Button } from "./ui/button";
 import { ThreadProps } from "@/shared/api/types/types";
 import { useState } from "react";
 import { Textarea } from "./ui";
-import { useAutoResizeTextarea } from "@/lib/hooks/useAutoResizeTextarea";
-import { useToggleLike } from "@/lib/hooks/useToggleLike";
+import { useAutoResizeTextarea } from "@/shared/lib/hooks/useAutoResizeTextarea";
+import { useToggleLike } from "@/shared/lib/hooks/useToggleLike";
 import { getComments, postComment } from "@/shared/api/Comments/api";
 import { CommentList } from "./CommentList";
-import { cn, formatCount } from "@/lib/utils";
+import { cn, formatCount } from "@/shared/lib/utils";
 
 interface ThreadComponentProps {
   thread: ThreadProps;
@@ -88,7 +88,7 @@ export const Thread = ({ thread }: ThreadComponentProps) => {
               {formatCount(commentsData?.length ?? 0)}
             </span>
           </Button>
-            {/* поделится  */}
+          {/* поделится  */}
           <Button>
             <ShareIcon />
           </Button>
@@ -112,7 +112,7 @@ export const Thread = ({ thread }: ThreadComponentProps) => {
               </Button>
             </div>
           </div>
-          <CommentList commentsData={commentsData} threadId={thread._id} />
+          <CommentList commentsData={commentsData} />
         </>
       )}
     </div>
