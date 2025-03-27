@@ -2,7 +2,7 @@ import { toggleLikeThread } from "@/shared/api/Thread/api";
 import { ThreadProps } from "@/shared/api/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const useToggleLike = (threadId: string) => {
+export const useToggleLikeThread = (threadId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: () => toggleLikeThread(threadId),

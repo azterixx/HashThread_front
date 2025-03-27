@@ -41,13 +41,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : "button";
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(buttonVariants({ variant, size, className }), "group")}
         ref={ref}
         {...props}
       >
-        <span className="flex items-center transition-transform delay-100 duration-200 hover:-translate-y-[3px] hover:scale-105">
+        <div className="flex items-center font-inter text-xs leading-xs transition-transform delay-100 duration-200 group-hover:-translate-y-[3px] group-hover:scale-105">
           {children}
-        </span>
+        </div>
       </Comp>
     );
   },

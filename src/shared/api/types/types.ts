@@ -11,7 +11,10 @@ export interface PostThreadResponse {
   text: string;
 }
 export interface PostCommentsResponse {
+  id: string;
   text: string;
   messageNumber: number;
+  likeCount: number;
   threadId: string;
+  isLiked: boolean;
 }

@@ -1,19 +1,42 @@
+import { cn, formatCount } from "@/shared/lib/utils";
+import { Button } from "./ui";
+import { ShareIcon } from "lucide-react";
+import MessageIcon from "@/icons/MessageIcon";
+import FlameIcon from "../icons/FlameIcon";
+import { PostCommentsResponse } from "@/shared/api/types/types";
+import BurningFlameIcon from "../icons/BurningFlameIcon";
+import { useToggleLikeComment } from "@/shared/lib/hooks/useToggleLikeComment";
+
 type CommentProps = {
-  text: string;
+  comment: PostCommentsResponse;
 };
 
-export const Comments = ({ text }: CommentProps) => {
+export const Comments = ({ comment }: CommentProps) => {
+ 
+  const { mutate: toggleLike, isPending } = useToggleLikeComment(comment.id);
+  console.log(comment.isLiked)
   return (
-    <div className="rounded-t-lg border-2 border-borderColor p-4">
-      <div className="flex gap-x-[12px]">
-        <div className="h-[36px] w-[36px] rounded-full bg-[#999999]" />
-        <div className="flex flex-col gap-y-[6px]">
-          <span className="inline-block h-[19px] font-inter font-mMedium leading-mMedium text-textWhite">
-            Anonym
-          </span>
-          <p className="custom-wrap-class font-inter text-m font-m leading-m text-textWhite">
-            {text}
-          </p>
+    <div className="flex gap-3 border-b-[1px] border-borderColor px-8 pb-4">
+      <div className="h-9 w-9 rounded-full bg-[#999999]" />
+
+      <div className="flex w-full flex-col gap-3">
+        <div className="flex justify-between">
+          <span className="font-medium text-white">Anonym</span>
+        </div>
+        <p className="font-inter text-sm text-white">{comment.text}</p>
+        <div className="flex gap-1">
+          <Button onClick={() => toggleLike()} disabled={isPending}>
+            {comment.isLiked ? <BurningFlameIcon /> : <FlameIcon />}
+            <span className={cn(comment.isLiked && "text-primaryGreen")}>
+              {formatCount(comment.likeCount)}
+            </span>
+          </Button>
+          <Button>
+            <MessageIcon />
+          </Button>
+          <Button>
+            <ShareIcon />
+          </Button>
         </div>
       </div>
     </div>

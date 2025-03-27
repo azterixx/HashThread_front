@@ -7,10 +7,12 @@ interface CommentList {
 
 export const CommentList = ({ commentsData }: CommentList) => {
   return (
-    <div className="flex flex-col gap-5">
-      {commentsData?.map((item) => (
-        <Comments key={item.text} text={item.text} />
+    <div className="flex flex-col gap-3">
+      {commentsData?.map((item, index) => (
+        <Comments key={index} comment={item}/>
       ))}
+      
+      {commentsData?.length === 0 && <p className="text-textGray text-center text-[18px]">Nothing here</p>}
     </div>
   );
 };
