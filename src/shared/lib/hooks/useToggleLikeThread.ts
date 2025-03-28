@@ -1,5 +1,5 @@
 import { toggleLikeThread } from "@/shared/api/Thread/api";
-import { ThreadProps } from "@/shared/api/types/types";
+import { ThreadType } from "@/shared/api/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useToggleLikeThread = (threadId: string) => {
@@ -8,8 +8,8 @@ export const useToggleLikeThread = (threadId: string) => {
     mutationFn: () => toggleLikeThread(threadId),
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ["threads"] });
-      const previousData = queryClient.getQueryData<ThreadProps[]>(["threads"]);
-      queryClient.setQueryData<ThreadProps[]>(["threads"], (oldData) =>
+      const previousData = queryClient.getQueryData<ThreadType[]>(["threads"]);
+      queryClient.setQueryData<ThreadType[]>(["threads"], (oldData) =>
         oldData?.map((t) =>
           t.id === threadId
             ? {
@@ -27,18 +27,6 @@ export const useToggleLikeThread = (threadId: string) => {
         queryClient.setQueryData(["threads"], context.previousData);
       }
     },
-    onSuccess: (data) => {
-      queryClient.setQueryData<ThreadProps[]>(["threads"], (oldData) =>
-        oldData?.map((t) =>
-          t.id === threadId
-            ? {
-                ...t,
-                isLiked: data.isLiked,
-                likeCount: data.likeCount,
-              }
-            : t,
-        ),
-      );
-    },
+
   });
 };

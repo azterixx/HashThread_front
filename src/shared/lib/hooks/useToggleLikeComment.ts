@@ -1,18 +1,22 @@
 import { toggleLikeComment } from "@/shared/api/Comments/api";
-import { PostCommentsResponse } from "@/shared/api/types/types";
+import { CommentType } from "@/shared/api/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const useToggleLikeComment = (commentId: string) => {
+export const useToggleLikeComment = (commentId: string, threadId: string) => {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: () => toggleLikeComment(commentId),
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["comments"] });
-      const previousData = queryClient.getQueryData<PostCommentsResponse[]>([
+      await queryClient.cancelQueries({ queryKey: ["comments", threadId] });
+
+      const previousData = queryClient.getQueryData<CommentType[]>([
         "comments",
+        threadId,
       ]);
-      queryClient.setQueryData<PostCommentsResponse[]>(
-        ["comments"],
+
+      queryClient.setQueryData<CommentType[]>(
+        ["comments", threadId],
         (oldData) =>
           oldData?.map((t) =>
             t.id === commentId
@@ -28,23 +32,8 @@ export const useToggleLikeComment = (commentId: string) => {
     },
     onError: (err, vars, context) => {
       if (context?.previousData) {
-        queryClient.setQueryData(["comments"], context.previousData);
+        queryClient.setQueryData(["comments", threadId], context.previousData);
       }
-    },
-    onSuccess: (data) => {
-      queryClient.setQueryData<PostCommentsResponse[]>(
-        ["comments"],
-        (oldData) =>
-          oldData?.map((t) =>
-            t.id === commentId
-              ? {
-                  ...t,
-                  isLiked: data.isLiked,
-                  likeCount: data.likeCount,
-                }
-              : t,
-          ),
-      );
     },
   });
 };

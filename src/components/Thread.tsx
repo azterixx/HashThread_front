@@ -5,8 +5,8 @@ import ShareIcon from "../icons/ShareIcon";
 import MessageIcon from "../icons/MessageIcon";
 import BurningFlameIcon from "../icons/BurningFlameIcon";
 import { Button } from "./ui/button";
-import { ThreadProps } from "@/shared/api/types/types";
-import { useState } from "react";
+import { ThreadType } from "@/shared/api/types/types";
+import { useCallback, useState } from "react";
 import { Textarea } from "./ui";
 import { useAutoResizeTextarea } from "@/shared/lib/hooks/useAutoResizeTextarea";
 import { useToggleLikeThread } from "@/shared/lib/hooks/useToggleLikeThread";
@@ -16,16 +16,14 @@ import { cn, formatCount } from "@/shared/lib/utils";
 import { X } from "lucide-react";
 
 interface ThreadComponentProps {
-  thread: ThreadProps;
+  thread: ThreadType;
 }
 export const Thread = ({ thread }: ThreadComponentProps) => {
-  console.log(thread.id)
   const [isComments, setIsComments] = useState(false);
   const { textAreaRef, text, setText, handleChange } = useAutoResizeTextarea();
-
   const { mutate: toggleLike, isPending } = useToggleLikeThread(thread.id);
-  const queryClient = useQueryClient();
 
+  const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: () => postComment(thread.id, text),
     onSuccess: () => {
@@ -38,6 +36,7 @@ export const Thread = ({ thread }: ThreadComponentProps) => {
   const { data: commentsData } = useQuery({
     queryKey: ["comments", thread.id],
     queryFn: () => getComments(thread.id),
+    select: (data) => data || [],
   });
 
   const createComment = () => {
@@ -45,10 +44,11 @@ export const Thread = ({ thread }: ThreadComponentProps) => {
     mutate();
   };
 
-  const toogleComment = () => {
-    setIsComments(!isComments);
-    setText("");
+  const toggleComment = () => {
+    setIsComments((prev) => !prev);
   };
+  console.log('тред');
+  
   return (
     <div className="min-h-[96px] animate-fadeIn border-b-2 border-borderColor">
       <div className="flex gap-3 p-4">
@@ -64,11 +64,11 @@ export const Thread = ({ thread }: ThreadComponentProps) => {
           <div className="flex gap-1">
             <Button onClick={() => toggleLike()} disabled={isPending}>
               {thread.isLiked ? <BurningFlameIcon /> : <FlameIcon />}
-              <span className={cn(thread.isLiked && "text-primaryGreen")}>
+              <span className={cn("text-textGray", thread.isLiked && "text-primaryGreen")}>
                 {formatCount(thread.likeCount)}
               </span>
             </Button>
-            <Button onClick={toogleComment}>
+            <Button onClick={toggleComment}>
               {isComments ? <X className="text-textGray" /> : <MessageIcon />}
               <span className="text-textGray">
                 {formatCount(commentsData?.length ?? 0)}
@@ -109,7 +109,7 @@ export const Thread = ({ thread }: ThreadComponentProps) => {
               </div>
             </div>
           </div>
-          <CommentList commentsData={commentsData} />
+          <CommentList threadId={thread.id} commentsData={commentsData} />
         </>
       )}
     </div>
