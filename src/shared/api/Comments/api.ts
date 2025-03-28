@@ -3,16 +3,22 @@ import { PostCommentsResponse } from "../types/types";
 
 export const postComment = async (threadId: string, text: string) =>
   (
-    await baseInstance.post<PostCommentsResponse>("/comment", {
-      threadId,
-      text,
-    })
+    await baseInstance.post<PostCommentsResponse>(
+      "/comment",
+      {
+        threadId,
+        text,
+      },
+      { withCredentials: true },
+    )
   ).data;
 
-  
 export const getComments = async (threadId: string) =>
-  (await baseInstance.get<PostCommentsResponse[]>(`/comment/${threadId}`)).data;
-
+  (
+    await baseInstance.get<PostCommentsResponse[]>(`/comment/${threadId}`, {
+      withCredentials: true,
+    })
+  ).data;
 
 export const toggleLikeComment = async (commentId: string) =>
   (
