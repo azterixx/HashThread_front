@@ -1,20 +1,21 @@
 import { toggleLikeComment } from "@/shared/api/Comments/api";
-import { PostCommentsResponse } from "@/shared/api/types/types";
+import { CommentType } from "@/shared/api/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useToggleLikeComment = (commentId: string, threadId: string) => {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: () => toggleLikeComment(commentId),
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ["comments", threadId] });
 
-      const previousData = queryClient.getQueryData<PostCommentsResponse[]>([
+      const previousData = queryClient.getQueryData<CommentType[]>([
         "comments",
         threadId,
       ]);
 
-      queryClient.setQueryData<PostCommentsResponse[]>(
+      queryClient.setQueryData<CommentType[]>(
         ["comments", threadId],
         (oldData) =>
           oldData?.map((t) =>
@@ -27,7 +28,6 @@ export const useToggleLikeComment = (commentId: string, threadId: string) => {
               : t,
           ),
       );
-
       return { previousData };
     },
     onError: (err, vars, context) => {
@@ -35,9 +35,5 @@ export const useToggleLikeComment = (commentId: string, threadId: string) => {
         queryClient.setQueryData(["comments", threadId], context.previousData);
       }
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["comments", threadId] });
-    },
   });
 };
-

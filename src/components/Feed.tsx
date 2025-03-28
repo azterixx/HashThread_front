@@ -1,7 +1,7 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { fetchFeed } from "@/shared/api/Feed/api";
-import { ThreadProps } from "@/shared/api/types/types";
+import { ThreadType } from "@/shared/api/types/types";
 import { Thread } from "./Thread";
 import { FeedSkeleton } from "./FeedSkeleton";
 
@@ -10,7 +10,7 @@ export function Feed() {
     data: feedData,
     error,
     isLoading,
-  } = useQuery<ThreadProps[]>({
+  } = useQuery<ThreadType[]>({
     queryKey: ["threads"],
     queryFn: fetchFeed,
     refetchInterval: 10_000,

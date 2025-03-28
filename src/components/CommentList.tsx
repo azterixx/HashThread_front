@@ -1,12 +1,14 @@
-import { PostCommentsResponse } from "@/shared/api/types/types";
+import { CommentType } from "@/shared/api/types/types";
 import { Comments } from "./Comment";
 
+
 interface CommentList {
-  commentsData: PostCommentsResponse[] | undefined;
+  commentsData: CommentType[] | undefined;
   threadId: string;
 }
 
 export const CommentList = ({ threadId, commentsData }: CommentList) => {
+  console.log("список");
   return (
     <div className="flex flex-col gap-3">
       {commentsData?.map((item, index) => (
