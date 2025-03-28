@@ -11,7 +11,7 @@ export const useToggleLikeThread = (threadId: string) => {
       const previousData = queryClient.getQueryData<ThreadProps[]>(["threads"]);
       queryClient.setQueryData<ThreadProps[]>(["threads"], (oldData) =>
         oldData?.map((t) =>
-          t._id === threadId
+          t.id === threadId
             ? {
                 ...t,
                 isLiked: !t.isLiked,
@@ -30,7 +30,7 @@ export const useToggleLikeThread = (threadId: string) => {
     onSuccess: (data) => {
       queryClient.setQueryData<ThreadProps[]>(["threads"], (oldData) =>
         oldData?.map((t) =>
-          t._id === threadId
+          t.id === threadId
             ? {
                 ...t,
                 isLiked: data.isLiked,

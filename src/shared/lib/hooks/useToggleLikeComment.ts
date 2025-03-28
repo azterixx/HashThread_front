@@ -33,7 +33,7 @@ export const useToggleLikeComment = (commentId: string) => {
     },
     onSuccess: (data) => {
       queryClient.setQueryData<PostCommentsResponse[]>(
-        ["threads"],
+        ["comments"],
         (oldData) =>
           oldData?.map((t) =>
             t.id === commentId

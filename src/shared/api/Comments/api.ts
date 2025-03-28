@@ -9,8 +9,10 @@ export const postComment = async (threadId: string, text: string) =>
     })
   ).data;
 
+  
 export const getComments = async (threadId: string) =>
   (await baseInstance.get<PostCommentsResponse[]>(`/comment/${threadId}`)).data;
+
 
 export const toggleLikeComment = async (commentId: string) =>
   (

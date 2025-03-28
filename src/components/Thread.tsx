@@ -19,25 +19,25 @@ interface ThreadComponentProps {
   thread: ThreadProps;
 }
 export const Thread = ({ thread }: ThreadComponentProps) => {
+  console.log(thread.id)
   const [isComments, setIsComments] = useState(false);
   const { textAreaRef, text, setText, handleChange } = useAutoResizeTextarea();
 
-  const { mutate: toggleLike, isPending } = useToggleLikeThread(thread._id);
+  const { mutate: toggleLike, isPending } = useToggleLikeThread(thread.id);
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
-    mutationFn: () => postComment(thread._id, text),
+    mutationFn: () => postComment(thread.id, text),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["comments", thread._id],
+        queryKey: ["comments", thread.id],
       });
       setText("");
     },
   });
   const { data: commentsData } = useQuery({
-    queryKey: ["comments", thread._id],
-    queryFn: () => getComments(thread._id),
-    refetchInterval: 10_000,
+    queryKey: ["comments", thread.id],
+    queryFn: () => getComments(thread.id),
   });
 
   const createComment = () => {

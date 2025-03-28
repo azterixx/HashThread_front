@@ -27,7 +27,7 @@ export function Feed() {
 
   return (
     <div>
-      {feedData?.map((thread) => <Thread key={thread._id} thread={thread} />)}
+      {feedData?.map((thread) => <Thread key={thread.id} thread={thread} />)}
     </div>
   );
 }

@@ -1,20 +1,21 @@
 import { cn, formatCount } from "@/shared/lib/utils";
 import { Button } from "./ui";
-import { ShareIcon } from "lucide-react";
+import ShareIcon from "../icons/ShareIcon";
 import MessageIcon from "@/icons/MessageIcon";
 import FlameIcon from "../icons/FlameIcon";
 import { PostCommentsResponse } from "@/shared/api/types/types";
 import BurningFlameIcon from "../icons/BurningFlameIcon";
 import { useToggleLikeComment } from "@/shared/lib/hooks/useToggleLikeComment";
 
+
 type CommentProps = {
   comment: PostCommentsResponse;
 };
 
 export const Comments = ({ comment }: CommentProps) => {
- 
   const { mutate: toggleLike, isPending } = useToggleLikeComment(comment.id);
-  console.log(comment.isLiked)
+  
+  console.log(comment)
   return (
     <div className="flex gap-3 border-b-[1px] border-borderColor px-8 pb-4">
       <div className="h-9 w-9 rounded-full bg-[#999999]" />

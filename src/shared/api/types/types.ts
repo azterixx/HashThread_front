@@ -1,5 +1,5 @@
 export interface ThreadProps {
-  _id: string;
+  id: string;
   text: string;
   messageCount: number;
   likeCount: number;
