@@ -1,6 +1,5 @@
 import { baseInstance } from "../base";
-import { ThreadProps } from "../types/types";
+import { ThreadType } from "../types/types";
 
 export const fetchFeed = async () =>
-  (await baseInstance.get<ThreadProps[]>("/feed"))
-    .data;
+  (await baseInstance.get<ThreadType[]>("/feed")).data;
