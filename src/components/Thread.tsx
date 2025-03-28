@@ -19,7 +19,7 @@ interface ThreadComponentProps {
   thread: ThreadProps;
 }
 export const Thread = ({ thread }: ThreadComponentProps) => {
-  console.log(thread.id)
+
   const [isComments, setIsComments] = useState(false);
   const { textAreaRef, text, setText, handleChange } = useAutoResizeTextarea();
 
@@ -64,7 +64,7 @@ export const Thread = ({ thread }: ThreadComponentProps) => {
           <div className="flex gap-1">
             <Button onClick={() => toggleLike()} disabled={isPending}>
               {thread.isLiked ? <BurningFlameIcon /> : <FlameIcon />}
-              <span className={cn(thread.isLiked && "text-primaryGreen")}>
+              <span className={cn("text-textGray", thread.isLiked && "text-primaryGreen")}>
                 {formatCount(thread.likeCount)}
               </span>
             </Button>
@@ -109,7 +109,7 @@ export const Thread = ({ thread }: ThreadComponentProps) => {
               </div>
             </div>
           </div>
-          <CommentList commentsData={commentsData} />
+          <CommentList threadId={thread.id} commentsData={commentsData} />
         </>
       )}
     </div>

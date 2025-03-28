@@ -3,16 +3,19 @@ import { Comments } from "./Comment";
 
 interface CommentList {
   commentsData: PostCommentsResponse[] | undefined;
+  threadId: string;
 }
 
-export const CommentList = ({ commentsData }: CommentList) => {
+export const CommentList = ({ threadId, commentsData }: CommentList) => {
   return (
     <div className="flex flex-col gap-3">
       {commentsData?.map((item, index) => (
-        <Comments key={index} comment={item}/>
+        <Comments threadId={threadId} key={index} comment={item} />
       ))}
-      
-      {commentsData?.length === 0 && <p className="text-textGray text-center text-[18px]">Nothing here</p>}
+
+      {commentsData?.length === 0 && (
+        <p className="text-center text-[18px] text-textGray">Nothing here</p>
+      )}
     </div>
   );
 };
