@@ -1,41 +1,24 @@
 "use client";
-import React, { useState, useRef, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postThread, PostThreadResponse } from "@/shared/api/Thread";
+import { postThread } from "@/shared/api/Thread/api";
 import { Button, Textarea } from "./ui";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
+import { PostThreadResponse } from "@/shared/api/types/types";
+import { useAutoResizeTextarea } from "@/shared/lib/hooks/useAutoResizeTextarea";
 export const CreateThread = () => {
-  const [text, setText] = useState("");
-  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
-
   const queryClient = useQueryClient();
+  const { textAreaRef, text, setText, handleChange } = useAutoResizeTextarea();
 
   const { mutate, isPending } = useMutation<PostThreadResponse, Error, string>({
     mutationFn: postThread,
-    onSuccess: (data: PostThreadResponse) => {
+    onSuccess: () => {
       setText("");
       if (textAreaRef.current) {
         textAreaRef.current.style.height = "auto";
       }
-      console.log("Успешно создан тред с ID:", data.id);
-      void queryClient.invalidateQueries({ queryKey: ["threads"] });
-    },
-    onError: (error: Error) => {
-      console.error("Ошибка при создании треда:", error);
+      queryClient.invalidateQueries({ queryKey: ["threads"] });
     },
   });
-
-  const autoResize = useCallback(() => {
-    if (textAreaRef.current) {
-      textAreaRef.current.style.height = "auto";
-      textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
-    }
-  }, []);
-
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setText(e.target.value);
-    autoResize();
-  };
 
   const handlePost = () => {
     if (!text.trim() || isPending) return;
@@ -74,9 +57,7 @@ export const CreateThread = () => {
               onClick={handlePost}
               disabled={isPending || !text.trim()}
               className={cn(
-                text &&
-                  !isPending &&
-                  "h-[33px] w-[58px] rounded-[8px] bg-primaryGreen text-center font-inter text-xs leading-xs text-bgDarker",
+                text && !isPending && "bg-primaryGreen text-bgDarker",
               )}
             >
               {isPending ? "..." : "Post"}

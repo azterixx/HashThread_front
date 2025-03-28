@@ -3,10 +3,9 @@ import Feed from "@/components/Feed";
 
 export default function Home() {
   return (
-    <>
-      <Feed>
-        <CreateThread />
-      </Feed>
-    </>
+    <div className="mx-auto w-full overflow-y-auto bg-bgDark md:w-1/2">
+      <CreateThread />
+      <Feed />
+    </div>
   );
 }
