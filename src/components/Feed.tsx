@@ -1,18 +1,24 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { fetchFeed } from "@/shared/api/Feed/api";
-import { ThreadType } from "@/shared/api/types/types";
+import { CommentType, ThreadType } from "@/shared/api/types/types";
 import { Thread } from "./Thread";
 import { FeedSkeleton } from "./FeedSkeleton";
+import { getComments } from "@/shared/api/Comments/api";
+import { Comments } from "./Comment";
 
-export function Feed() {
-  const {
-    data: feedData,
-    error,
-    isLoading,
-  } = useQuery<ThreadType[]>({
-    queryKey: ["threads"],
-    queryFn: fetchFeed,
+type FeedProps = {
+  type?: "threads" | "comments";
+  threadId?: string;
+};
+
+export function Feed({ type = "threads", threadId }: FeedProps) {
+  const queryFn = type === "threads" ? fetchFeed : () => getComments(threadId ?? "");
+  const queryKey = type === "threads" ? ["threads"] : ["comments", threadId];
+
+  const { data, error, isLoading } = useQuery<ThreadType[] | CommentType[]>({
+    queryKey: queryKey,
+    queryFn: queryFn,
     refetchInterval: 10_000,
   });
 
@@ -27,9 +33,15 @@ export function Feed() {
 
   return (
     <div>
-      {feedData?.map((thread) => <Thread key={thread.id} thread={thread} />)}
+      {type === "threads"
+        ? (data as ThreadType[])?.map((thread) => (
+            <Thread key={thread.id} thread={thread} />
+          ))
+        : (data as CommentType[])?.map((comment) => (
+            <Comments comment={comment} threadId={threadId!} />
+          ))}
     </div>
   );
 }
 
-export default Feed;
+
