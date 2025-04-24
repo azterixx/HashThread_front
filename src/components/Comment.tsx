@@ -1,12 +1,11 @@
-import { cn, formatCount } from "@/shared/lib/utils";
 import { Button, Textarea } from "./ui";
 import ShareIcon from "../icons/ShareIcon";
-import MessageIcon from "@/icons/MessageIcon";
-import FlameIcon from "../icons/FlameIcon";
 import { CommentType } from "@/shared/api/types/types";
-import BurningFlameIcon from "../icons/BurningFlameIcon";
 import { useToggleLikeComment } from "@/shared/lib/hooks/useToggleLikeComment";
 import { useState } from "react";
+import { UserIcon } from "./UserIcon";
+import { LikeButton } from "./LikeButton";
+import { CommentButton } from "./CommentButton";
 
 type CommentProps = {
   comment: CommentType;
@@ -27,42 +26,24 @@ export const Comments = ({ comment, threadId }: CommentProps) => {
   return (
     <div className="min-h-[96px] animate-fadeIn border-b-2 border-borderColor">
       <div className="flex gap-3 p-4">
-        <div className="h-9 w-9 rounded-full bg-[#999999]" />
-
+        <UserIcon />
         <div className="flex w-full flex-col gap-3">
-          <div className="flex justify-between">
-            <span className="font-medium text-white">Anonym</span>
-          </div>
+          <span className="font-medium text-white">Anonym</span>
 
           <p className="font-inter text-sm text-textGray">{comment.text}</p>
+
           <div className="flex gap-1">
-            <Button onClick={() => toggleLike()} disabled={isPending}>
-              {comment.isLiked ? <BurningFlameIcon /> : <FlameIcon />}
-              <span
-                className={cn(
-                  "text-textGray",
-                  comment.isLiked && "text-primaryGreen",
-                )}
-              >
-                {formatCount(comment.likeCount)}
-              </span>
-            </Button>
-            <Button onClick={toggleComment}>
-              <MessageIcon
-                className={cn(
-                  "text-textGray",
-                  isCommentOpen && "text-primaryGreen",
-                )}
-              />
-              <span
-                className={cn(
-                  "text-textGray",
-                  isCommentOpen && "text-primaryGreen",
-                )}
-              >
-                {formatCount(5)}
-              </span>
-            </Button>
+            <LikeButton
+              onToggleLike={() => toggleLike()}
+              disabled={isPending}
+              isLiked={comment.isLiked}
+              likeCount={comment.likeCount}
+            />
+            <CommentButton
+              count={2}
+              isActive={isCommentOpen}
+              onClick={toggleComment}
+            />
             <Button>
               <ShareIcon />
             </Button>

@@ -13,10 +13,6 @@ type CreateProps = {
 
 export const CreateThread = ({ type, threadId }: CreateProps) => {
   const queryClient = useQueryClient();
-  const mutationFn =
-    type === "comment"
-      ? () => postComment(threadId!, text)
-      : () => postThread(text);
   const { textAreaRef, text, setText, handleChange } = useAutoResizeTextarea();
 
   const { mutate: threadMutate, isPending: isPendintThread } = useMutation({
