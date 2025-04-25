@@ -3,27 +3,45 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postThread } from "@/shared/api/Thread/api";
 import { Button, Textarea } from "./ui";
 import { cn } from "@/shared/lib/utils";
-import { PostThreadResponse } from "@/shared/api/types/types";
 import { useAutoResizeTextarea } from "@/shared/lib/hooks/useAutoResizeTextarea";
-export const CreateThread = () => {
+import { postComment } from "@/shared/api/Comments/api";
+
+type CreateProps = {
+  type?: "thread" | "comment";
+  threadId?: string;
+};
+
+export const CreateThread = ({ type, threadId }: CreateProps) => {
   const queryClient = useQueryClient();
   const { textAreaRef, text, setText, handleChange } = useAutoResizeTextarea();
 
-  const { mutate, isPending } = useMutation<PostThreadResponse, Error, string>({
+  const { mutate: threadMutate, isPending: isPendintThread } = useMutation({
     mutationFn: postThread,
     onSuccess: () => {
       setText("");
-      if (textAreaRef.current) {
-        textAreaRef.current.style.height = "auto";
-      }
+      textAreaRef.current!.style.height = "auto";
       queryClient.invalidateQueries({ queryKey: ["threads"] });
     },
   });
 
+  const { mutate: commentMutate, isPending: isPendintComment } = useMutation({
+    mutationFn: () => postComment(threadId!, text),
+    onSuccess: () => {
+      setText("");
+      textAreaRef.current!.style.height = "auto";
+      queryClient.invalidateQueries({ queryKey: ["comments", threadId] });
+    },
+  });
+
   const handlePost = () => {
-    if (!text.trim() || isPending) return;
-    mutate(text);
+    if (!text.trim()) return;
+    if (type === "comment") {
+      commentMutate();
+    } else {
+      threadMutate(text);
+    }
   };
+  const isPending = type === "comment" ? isPendintComment : isPendintThread;
 
   // Функция для фокусировки на textarea
   const handleFocus = () => {

@@ -1,12 +1,11 @@
-import { cn, formatCount } from "@/shared/lib/utils";
-import { Button } from "./ui";
+import { Button, Textarea } from "./ui";
 import ShareIcon from "../icons/ShareIcon";
-import MessageIcon from "@/icons/MessageIcon";
-import FlameIcon from "../icons/FlameIcon";
 import { CommentType } from "@/shared/api/types/types";
-import BurningFlameIcon from "../icons/BurningFlameIcon";
 import { useToggleLikeComment } from "@/shared/lib/hooks/useToggleLikeComment";
-import { useCallback } from "react";
+import { useState } from "react";
+import { UserIcon } from "./UserIcon";
+import { LikeButton } from "./LikeButton";
+import { CommentButton } from "./CommentButton";
 
 type CommentProps = {
   comment: CommentType;
@@ -14,39 +13,66 @@ type CommentProps = {
 };
 
 export const Comments = ({ comment, threadId }: CommentProps) => {
+  const [isCommentOpen, setIsCommentOpen] = useState(false);
   const { mutate: toggleLike, isPending } = useToggleLikeComment(
     comment.id,
     threadId,
   );
-  console.log('комментари');
+
+  const toggleComment = () => {
+    setIsCommentOpen((prev) => !prev);
+  };
+  console.log("комментари");
   return (
-    <div className="flex gap-3 border-b-[1px] border-borderColor px-8 pb-4">
-      <div className="h-9 w-9 rounded-full bg-[#999999]" />
-      <div className="flex w-full flex-col gap-3">
-        <div className="flex justify-between">
+    <div className="min-h-[96px] animate-fadeIn border-b-2 border-borderColor">
+      <div className="flex gap-3 p-4">
+        <UserIcon />
+        <div className="flex w-full flex-col gap-3">
           <span className="font-medium text-white">Anonym</span>
-        </div>
-        <p className="font-inter text-sm text-white">{comment.text}</p>
-        <div className="flex gap-1">
-          <Button onClick={() => toggleLike()} disabled={isPending}>
-            {comment.isLiked ? <BurningFlameIcon /> : <FlameIcon />}
-            <span
-              className={cn(
-                "text-textGray",
-                comment.isLiked && "text-primaryGreen",
-              )}
-            >
-              {formatCount(comment.likeCount)}
-            </span>
-          </Button>
-          <Button>
-            <MessageIcon />
-          </Button>
-          <Button>
-            <ShareIcon />
-          </Button>
+
+          <p className="font-inter text-sm text-textGray">{comment.text}</p>
+
+          <div className="flex gap-1">
+            <LikeButton
+              onToggleLike={() => toggleLike()}
+              disabled={isPending}
+              isLiked={comment.isLiked}
+              likeCount={comment.likeCount}
+            />
+            <CommentButton
+              count={2}
+              isActive={isCommentOpen}
+              onClick={toggleComment}
+            />
+            <Button>
+              <ShareIcon />
+            </Button>
+          </div>
         </div>
       </div>
+
+      {isCommentOpen && (
+        <>
+          <div>
+            <div className="flex gap-3 p-4">
+              {/* Аватар или иконка пользователя */}
+              <div>
+                <div className="h-7 w-7 rounded-full bg-[#999999]" />
+              </div>
+
+              <div className="flex w-full flex-col gap-3 border-b-2 border-borderColor pb-1">
+                <Textarea
+                  placeholder="Type something interesting here"
+                  rows={1}
+                />
+                <div className="flex w-full justify-end">
+                  <Button variant={"create"}>Create</Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
