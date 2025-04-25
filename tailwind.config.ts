@@ -32,7 +32,7 @@ export default {
   			xs: '400'
   		},
   		colors: {
-  			primaryGreen: '#52FA18',
+  			primaryGreen: '#9BFFA7',
   			borderColor: '#323232',
   			bgDark: '#181818',
   			bgDarker: '#0A0A0A',

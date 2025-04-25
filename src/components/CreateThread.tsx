@@ -14,7 +14,8 @@ type CreateProps = {
 export const CreateThread = ({ type, threadId }: CreateProps) => {
   const queryClient = useQueryClient();
   const { textAreaRef, text, setText, handleChange } = useAutoResizeTextarea();
-
+  // УЛУЧШИТЬ КОД В БУДУЩЕМ
+  // для тредов
   const { mutate: threadMutate, isPending: isPendintThread } = useMutation({
     mutationFn: postThread,
     onSuccess: () => {
@@ -23,7 +24,7 @@ export const CreateThread = ({ type, threadId }: CreateProps) => {
       queryClient.invalidateQueries({ queryKey: ["threads"] });
     },
   });
-
+  // для комментариев
   const { mutate: commentMutate, isPending: isPendintComment } = useMutation({
     mutationFn: () => postComment(threadId!, text),
     onSuccess: () => {
@@ -35,6 +36,7 @@ export const CreateThread = ({ type, threadId }: CreateProps) => {
 
   const handlePost = () => {
     if (!text.trim()) return;
+
     if (type === "comment") {
       commentMutate();
     } else {
@@ -63,6 +65,7 @@ export const CreateThread = ({ type, threadId }: CreateProps) => {
         {/* Блок с textarea и кнопкой */}
         <div className="flex w-full flex-col gap-3">
           <Textarea
+            className={cn(type === "comment" && "bg-bgLighter")}
             ref={textAreaRef}
             placeholder="Type something interesting here"
             value={text}
