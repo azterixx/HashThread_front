@@ -13,7 +13,6 @@ interface ThreadComponentProps {
 export const Thread = ({ thread }: ThreadComponentProps) => {
   const { mutate: toggleLike, isPending } = useToggleLikeThread(thread.id);
 
-
   return (
     <div className="min-h-[96px] animate-fadeIn border-b-2 border-borderColor">
       <div className="flex gap-3 p-4">
@@ -21,7 +20,9 @@ export const Thread = ({ thread }: ThreadComponentProps) => {
         <div className="flex w-full flex-col gap-3">
           <span className="font-medium text-white">Anonym</span>
 
-          <p className="font-inter text-sm text-white custom-wrap-class break-all">{thread.text}</p>
+          <p className="custom-wrap-class font-inter text-m font-m leading-m text-textWhite">
+            {thread.text}
+          </p>
 
           <div className="flex gap-1">
             <LikeButton

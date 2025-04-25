@@ -65,7 +65,6 @@ export const CreateThread = ({ type, threadId }: CreateProps) => {
         {/* Блок с textarea и кнопкой */}
         <div className="flex w-full flex-col gap-3">
           <Textarea
-            className={cn(type === "comment" && "bg-bgLighter")}
             ref={textAreaRef}
             placeholder="Type something interesting here"
             value={text}

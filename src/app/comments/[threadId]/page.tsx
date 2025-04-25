@@ -10,7 +10,7 @@ export default async function CommentsPage({
   const { threadId } = await params;
 
   return (
-    <div className="mx-auto w-full overflow-y-auto bg-bgLighter md:w-1/2">
+    <div className="mx-auto w-full overflow-y-auto bg-bgDark md:w-1/2">
       <div className="flex items-center justify-between px-3">
         <h3 className="py-4 text-xl text-white">Comments</h3>
         <Switcher />

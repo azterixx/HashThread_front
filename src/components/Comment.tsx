@@ -46,7 +46,9 @@ export const Comments = ({ comment, threadId }: CommentProps) => {
           <div className="flex w-full flex-col gap-3">
             <span className="font-medium text-white">Anonym</span>
 
-            <p className="font-inter text-sm text-white">{comment.text}</p>
+            <p className="custom-wrap-class font-inter text-m font-m leading-m text-textWhite">
+              {comment.text}
+            </p>
 
             <div className="flex gap-1">
               <LikeButton
@@ -79,7 +81,6 @@ export const Comments = ({ comment, threadId }: CommentProps) => {
 
               <div className="flex w-full flex-col gap-3">
                 <Textarea
-                  className="bg-bgLighter"
                   value={text}
                   onChange={handleChange}
                   placeholder="Type something interesting here"
