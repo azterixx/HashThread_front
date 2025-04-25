@@ -21,7 +21,7 @@ export const Thread = ({ thread }: ThreadComponentProps) => {
         <div className="flex w-full flex-col gap-3">
           <span className="font-medium text-white">Anonym</span>
 
-          <p className="font-inter text-sm text-textGray custom-wrap-class break-all">{thread.text}</p>
+          <p className="font-inter text-sm text-white custom-wrap-class break-all">{thread.text}</p>
 
           <div className="flex gap-1">
             <LikeButton
