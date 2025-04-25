@@ -13,7 +13,8 @@ type FeedProps = {
 };
 
 export function Feed({ type = "threads", threadId }: FeedProps) {
-  const queryFn = type === "threads" ? fetchFeed : () => getComments(threadId ?? "");
+  const queryFn =
+    type === "threads" ? fetchFeed : () => getComments(threadId ?? "");
   const queryKey = type === "threads" ? ["threads"] : ["comments", threadId];
 
   const { data, error, isLoading } = useQuery<ThreadType[] | CommentType[]>({
@@ -38,10 +39,8 @@ export function Feed({ type = "threads", threadId }: FeedProps) {
             <Thread key={thread.id} thread={thread} />
           ))
         : (data as CommentType[])?.map((comment) => (
-            <Comments comment={comment} threadId={threadId!} />
+            <Comments key={comment.id} comment={comment} threadId={threadId!} />
           ))}
     </div>
   );
 }
-
-
