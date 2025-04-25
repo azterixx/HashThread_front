@@ -46,7 +46,7 @@ export const Comments = ({ comment, threadId }: CommentProps) => {
           <div className="flex w-full flex-col gap-3">
             <span className="font-medium text-white">Anonym</span>
 
-            <p className="font-inter text-sm text-textGray">{comment.text}</p>
+            <p className="font-inter text-sm text-white">{comment.text}</p>
 
             <div className="flex gap-1">
               <LikeButton
