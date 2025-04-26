@@ -18,6 +18,7 @@ type CommentProps = {
 export const Comments = ({ comment, threadId }: CommentProps) => {
   const queryClient = useQueryClient();
   const [isCommentOpen, setIsCommentOpen] = useState(false);
+  
   const { text, handleChange, setText, textAreaRef } = useAutoResizeTextarea();
   const { mutate: toggleLike, isPending } = useToggleLikeComment(
     comment.id,
@@ -25,7 +26,7 @@ export const Comments = ({ comment, threadId }: CommentProps) => {
   );
 
   const { mutate: commentMutate } = useMutation({
-    mutationFn: () => postComment(comment.id, text),
+    mutationFn: () => postComment(comment.id, text, comment.messageNumber),
     onSuccess: () => {
       setText("");
       textAreaRef.current!.style.height = "auto";

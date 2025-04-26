@@ -7,7 +7,8 @@ import { cn } from "@/shared/lib/utils";
 const buttonVariants = cva("flex items-center justify-center", {
   variants: {
     variant: {
-      default: "bg-bgLighter text-primary-foreground rounded-[16px]",
+      default:
+        "bg-bgLighter text-primary-foreground rounded-[16px] hover:bg-grayDark  duration-300 ease-in-out ",
       create:
         "h-[33px] w-[58px] rounded-[8px] border border-borderColor bg-bgLighter text-center font-inter text-xs leading-xs text-textWhite",
       outline:
@@ -45,7 +46,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        <div className="flex items-center font-inter text-xs leading-xs transition-transform delay-100 duration-200 group-hover:-translate-y-[3px] group-hover:scale-105">
+        <div className="flex items-center font-inter text-xs leading-xs">
           {children}
         </div>
       </Comp>
