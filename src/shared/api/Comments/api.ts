@@ -1,11 +1,16 @@
 import { baseInstance } from "../base";
 import { CommentType, PostCommentResponse } from "../types/types";
 
-export const postComment = async (threadId: string, text: string) =>
+export const postComment = async (
+  threadId: string,
+  text: string,
+  replyTo?: number,
+) =>
   (
     await baseInstance.post<PostCommentResponse>("/comment", {
       threadId,
       text,
+      replyTo,
     })
   ).data;
 

@@ -38,9 +38,18 @@ export function Feed({ type = "threads", threadId }: FeedProps) {
         ? (data as ThreadType[])?.map((thread) => (
             <Thread key={thread.id} thread={thread} />
           ))
-        : (data as CommentType[])?.map((comment) => (
-            <Comments key={comment.id} comment={comment} threadId={threadId!} />
-          ))}
+        : (data as CommentType[])
+            ?.filter((comment) => comment.replyTo === null)
+            ?.map((comment) => (
+              <Comments
+                key={comment.id}
+                comment={comment}
+                threadId={threadId!}
+                replies={(data as CommentType[]).filter(
+                  (item) => item.replyTo === comment.messageNumber,
+                )}
+              />
+            ))}
     </div>
   );
 }

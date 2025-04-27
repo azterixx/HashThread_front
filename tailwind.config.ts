@@ -37,6 +37,7 @@ export default {
   			bgDark: '#181818',
   			bgDarker: '#0A0A0A',
   			bgLighter: '#1E1E1E',
+				grayDark: "#2E2E2E",
   			textGray: '#999',
   			textWhite: '#F3F5F7',
   			background: 'hsl(var(--background))',

@@ -5,13 +5,21 @@ import { Button, Textarea } from "./ui";
 import { cn } from "@/shared/lib/utils";
 import { useAutoResizeTextarea } from "@/shared/lib/hooks/useAutoResizeTextarea";
 import { postComment } from "@/shared/api/Comments/api";
+import { UserIcon } from "./UserIcon";
 
 type CreateProps = {
   type?: "thread" | "comment";
   threadId?: string;
+  repliesTo?: number;
+  onCancel?: () => void;
 };
 
-export const CreateThread = ({ type, threadId }: CreateProps) => {
+export const CreateThreadAndComment = ({
+  type,
+  threadId,
+  repliesTo,
+  onCancel,
+}: CreateProps) => {
   const queryClient = useQueryClient();
   const { textAreaRef, text, setText, handleChange } = useAutoResizeTextarea();
   // УЛУЧШИТЬ КОД В БУДУЩЕМ
@@ -26,7 +34,7 @@ export const CreateThread = ({ type, threadId }: CreateProps) => {
   });
   // для комментариев
   const { mutate: commentMutate, isPending: isPendintComment } = useMutation({
-    mutationFn: () => postComment(threadId!, text),
+    mutationFn: () => postComment(threadId!, text, repliesTo),
     onSuccess: () => {
       setText("");
       textAreaRef.current!.style.height = "auto";
@@ -52,15 +60,10 @@ export const CreateThread = ({ type, threadId }: CreateProps) => {
 
   return (
     // Добавляем onClick для фокусировки
-    <div
-      className="h-auto w-full border-b border-borderColor"
-      onClick={handleFocus}
-    >
+    <div className="h-auto w-full" onClick={handleFocus}>
       <div className="flex gap-3 p-4">
         {/* Аватар или иконка пользователя */}
-        <div>
-          <div className="h-9 w-9 rounded-full bg-[#999999]" />
-        </div>
+        <UserIcon size={repliesTo ? "md" : "lg"} />
 
         {/* Блок с textarea и кнопкой */}
         <div className="flex w-full flex-col gap-3">
@@ -71,7 +74,12 @@ export const CreateThread = ({ type, threadId }: CreateProps) => {
             onChange={handleChange}
             rows={1}
           />
-          <div className="flex w-full justify-end">
+          <div className={cn("flex w-full justify-end", repliesTo && "gap-2")}>
+            {repliesTo && (
+              <Button onClick={onCancel} variant={"create"}>
+                Cancel
+              </Button>
+            )}
             <Button
               variant={"create"}
               onClick={handlePost}

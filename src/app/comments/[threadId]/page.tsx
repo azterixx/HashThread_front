@@ -1,4 +1,4 @@
-import { CreateThread } from "@/components/CreateThread";
+import { CreateThreadAndComment } from "@/components/CreateThreadAndComment";
 import { Feed } from "@/components/Feed";
 import { Switcher } from "@/components/Switcher";
 
@@ -15,7 +15,9 @@ export default async function CommentsPage({
         <h3 className="py-4 text-xl text-white">Comments</h3>
         <Switcher />
       </div>
-      <CreateThread type="comment" threadId={threadId} />
+      <div className="border-b border-borderColor">
+        <CreateThreadAndComment type="comment" threadId={threadId} />
+      </div>
       <Feed type="comments" threadId={threadId} />
     </div>
   );
