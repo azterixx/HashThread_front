@@ -6,44 +6,28 @@ import { useState } from "react";
 import { UserIcon } from "./UserIcon";
 import { LikeButton } from "./LikeButton";
 import { CommentButton } from "./CommentButton";
-import { useAutoResizeTextarea } from "@/shared/lib/hooks/useAutoResizeTextarea";
-import { postComment } from "@/shared/api/Comments/api";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { CreateThreadAndComment } from "./CreateThreadAndComment";
+import { ReplyItem } from "./ReplyItem";
 
 type CommentProps = {
   comment: CommentType;
   threadId: string;
+  replies?: CommentType[];
 };
 
-export const Comments = ({ comment, threadId }: CommentProps) => {
-  const queryClient = useQueryClient();
+export const Comments = ({ comment, threadId, replies }: CommentProps) => {
   const [isCommentOpen, setIsCommentOpen] = useState(false);
-  
-  const { text, handleChange, setText, textAreaRef } = useAutoResizeTextarea();
-  const { mutate: toggleLike, isPending } = useToggleLikeComment(
+  const { mutate: toggleLikeComment, isPending } = useToggleLikeComment(
     comment.id,
     threadId,
   );
-
-  const { mutate: commentMutate } = useMutation({
-    mutationFn: () => postComment(comment.id, text, comment.messageNumber),
-    onSuccess: () => {
-      setText("");
-      textAreaRef.current!.style.height = "auto";
-      queryClient.invalidateQueries({ queryKey: ["reply", comment.id] });
-    },
-  });
-
-  const handlePost = () => {
-    if (!text.trim()) return;
-    commentMutate();
-  };
 
   return (
     <>
       <div className="min-h-[96px] animate-fadeIn border-b-2 border-borderColor">
         <div className="flex gap-3 p-4">
-          <UserIcon />
+          <UserIcon size="lg" />
           <div className="flex w-full flex-col gap-3">
             <span className="font-medium text-white">Anonym</span>
 
@@ -53,13 +37,13 @@ export const Comments = ({ comment, threadId }: CommentProps) => {
 
             <div className="flex gap-1">
               <LikeButton
-                onToggleLike={() => toggleLike()}
+                onToggleLike={() => toggleLikeComment()}
                 disabled={isPending}
                 isLiked={comment.isLiked}
                 likeCount={comment.likeCount}
               />
               <CommentButton
-                count={2}
+                count={replies?.length || 0}
                 isActive={isCommentOpen}
                 onClick={() => setIsCommentOpen(true)}
               />
@@ -73,36 +57,25 @@ export const Comments = ({ comment, threadId }: CommentProps) => {
 
       {isCommentOpen && (
         <>
-          <div className="border-b-2 border-borderColor pl-14">
-            <div className="flex gap-3 p-4">
-              {/* Аватар или иконка пользователя */}
-              <div>
-                <div className="h-7 w-7 rounded-full bg-[#999999]" />
-              </div>
+          <div className="border-b-2 border-borderColor">
+            <div className="border-b-2 border-borderColor pl-14">
+              <CreateThreadAndComment
+                threadId={threadId}
+                type="comment"
+                onCancel={() => setIsCommentOpen(false)}
+                repliesTo={comment.messageNumber}
+              />
+            </div>
 
-              <div className="flex w-full flex-col gap-3">
-                <Textarea
-                  value={text}
-                  onChange={handleChange}
-                  placeholder="Type something interesting here"
-                  rows={1}
-                />
-                <div className="flex w-full justify-end gap-2">
-                  <Button
-                    onClick={() => setIsCommentOpen(false)}
-                    variant={"create"}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    onClick={handlePost}
-                    variant={"create"}
-                    className="bg-primaryGreen text-bgDarker"
-                  >
-                    Post
-                  </Button>
+            <div>
+              {replies?.map((item) => (
+                <div
+                  key={item.id}
+                  className="border-b-2 border-borderColor pl-14"
+                >
+                  <ReplyItem reply={item} threadId={threadId} />
                 </div>
-              </div>
+              ))}
             </div>
           </div>
         </>

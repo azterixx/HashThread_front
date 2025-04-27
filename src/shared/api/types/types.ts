@@ -12,8 +12,8 @@ export interface CommentType {
   likeCount: number;
   threadId: string;
   isLiked: boolean;
+  replyTo: number;
 }
-
 
 // отправка данных
 export interface PostThreadResponse {

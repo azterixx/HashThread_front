@@ -16,7 +16,7 @@ export const Thread = ({ thread }: ThreadComponentProps) => {
   return (
     <div className="min-h-[96px] animate-fadeIn border-b-2 border-borderColor">
       <div className="flex gap-3 p-4">
-        <UserIcon />
+        <UserIcon size="lg" />
         <div className="flex w-full flex-col gap-3">
           <span className="font-medium text-white">Anonym</span>
 
