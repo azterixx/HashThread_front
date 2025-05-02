@@ -1,14 +1,14 @@
 "use client";
 import ShareIcon from "../icons/ShareIcon";
 import { Button } from "./ui/button";
-import { ThreadType } from "@/shared/api/types/types";
+import { ThreadItems, ThreadType } from "@/shared/api/types/types";
 import { useToggleLikeThread } from "@/shared/lib/hooks/useToggleLikeThread";
 import { UserIcon } from "./UserIcon";
 import { LikeButton } from "./LikeButton";
 import { CommentButton } from "./CommentButton";
 
 interface ThreadComponentProps {
-  thread: ThreadType;
+  thread: ThreadItems;
 }
 export const Thread = ({ thread }: ThreadComponentProps) => {
   const { mutate: toggleLike, isPending } = useToggleLikeThread(thread.id);

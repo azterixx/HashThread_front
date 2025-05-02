@@ -1,11 +1,19 @@
-export interface ThreadType {
+export interface ThreadItems {
   id: string;
   text: string;
   messageCount: number;
   likeCount: number;
   isLiked: boolean;
+  isOp: boolean;
 }
-export interface CommentType {
+interface Meta {
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  pageSize: number;
+}
+
+export interface CommentItems {
   id: string;
   text: string;
   messageNumber: number;
@@ -13,6 +21,15 @@ export interface CommentType {
   threadId: string;
   isLiked: boolean;
   replyTo: number;
+}
+export interface ThreadType {
+  items: ThreadItems[];
+  meta: Meta;
+}
+
+export interface CommentType {
+  items: CommentItems[];
+  meta: Meta;
 }
 
 // отправка данных

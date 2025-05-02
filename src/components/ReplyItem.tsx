@@ -1,11 +1,11 @@
-import { CommentType } from "@/shared/api/types/types";
+import { CommentItems, CommentType } from "@/shared/api/types/types";
 import { UserIcon } from "./UserIcon";
 import React from "react";
 import { LikeButton } from "./LikeButton";
 import { useToggleLikeComment } from "@/shared/lib/hooks/useToggleLikeComment";
 
 interface ReplyItemProps {
-  reply: CommentType;
+  reply: CommentItems;
   threadId: string;
 }
 
