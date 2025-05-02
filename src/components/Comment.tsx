@@ -1,6 +1,6 @@
 import { Button, Textarea } from "./ui";
 import ShareIcon from "../icons/ShareIcon";
-import { CommentType } from "@/shared/api/types/types";
+import { CommentItems, CommentType } from "@/shared/api/types/types";
 import { useToggleLikeComment } from "@/shared/lib/hooks/useToggleLikeComment";
 import { useState } from "react";
 import { UserIcon } from "./UserIcon";
@@ -11,9 +11,9 @@ import { CreateThreadAndComment } from "./CreateThreadAndComment";
 import { ReplyItem } from "./ReplyItem";
 
 type CommentProps = {
-  comment: CommentType;
+  comment: CommentItems;
   threadId: string;
-  replies?: CommentType[];
+  replies?: CommentItems[];
 };
 
 export const Comments = ({ comment, threadId, replies }: CommentProps) => {

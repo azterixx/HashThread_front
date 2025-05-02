@@ -14,8 +14,14 @@ export const postComment = async (
     })
   ).data;
 
-export const getComments = async (threadId: string) =>
-  (await baseInstance.get<CommentType[]>(`/comment/${threadId}`)).data;
+export const getComments = async (threadId: string, page: number) =>
+  (
+    await baseInstance.get<CommentType>(`/comment/${threadId}`, {
+      params: {
+        page,
+      },
+    })
+  ).data;
 
 export const toggleLikeComment = async (commentId: string) =>
   (

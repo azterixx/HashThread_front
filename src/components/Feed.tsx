@@ -1,11 +1,18 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { fetchFeed } from "@/shared/api/Feed/api";
-import { CommentType, ThreadType } from "@/shared/api/types/types";
+import {
+  CommentItems,
+  CommentType,
+  ThreadItems,
+  ThreadType,
+} from "@/shared/api/types/types";
 import { Thread } from "./Thread";
 import { FeedSkeleton } from "./FeedSkeleton";
 import { getComments } from "@/shared/api/Comments/api";
 import { Comments } from "./Comment";
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
 
 type FeedProps = {
   type?: "threads" | "comments";
@@ -13,15 +20,37 @@ type FeedProps = {
 };
 
 export function Feed({ type = "threads", threadId }: FeedProps) {
-  const queryFn =
-    type === "threads" ? fetchFeed : () => getComments(threadId ?? "");
-  const queryKey = type === "threads" ? ["threads"] : ["comments", threadId];
 
-  const { data, error, isLoading } = useQuery<ThreadType[] | CommentType[]>({
-    queryKey: queryKey,
-    queryFn: queryFn,
-    refetchInterval: 10_000,
+  const queryKey = type === "threads" ? ["threads"] : ["comments", threadId];
+  const { ref, inView, entry } = useInView();
+  const {
+    data,
+    error,
+    isLoading,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useInfiniteQuery<ThreadType | CommentType>({
+    queryKey,
+    queryFn: ({ pageParam }) =>
+      type === "threads"
+        ? fetchFeed(Number(pageParam))
+        : getComments(threadId ?? "", Number(pageParam)),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      if (Number(lastPage.meta.currentPage) < lastPage.meta.totalPages) {
+        return Number(lastPage.meta.currentPage) + 1;
+      } else {
+        return undefined;
+      }
+    },
   });
+
+  useEffect(() => {
+    if (entry && inView) {
+      fetchNextPage();
+    }
+  }, [entry]);
 
   if (isLoading) {
     return (
@@ -34,22 +63,31 @@ export function Feed({ type = "threads", threadId }: FeedProps) {
 
   return (
     <div>
-      {type === "threads"
-        ? (data as ThreadType[])?.map((thread) => (
-            <Thread key={thread.id} thread={thread} />
-          ))
-        : (data as CommentType[])
-            ?.filter((comment) => comment.replyTo === null)
-            ?.map((comment) => (
-              <Comments
-                key={comment.id}
-                comment={comment}
-                threadId={threadId!}
-                replies={(data as CommentType[]).filter(
-                  (item) => item.replyTo === comment.messageNumber,
-                )}
-              />
-            ))}
+      <>
+        {data?.pages.map((page) => {
+          return type === "threads"
+            ? (page.items as ThreadItems[]).map((item) => (
+                <Thread thread={item} key={item.id} />
+              ))
+            : (page.items as CommentItems[])
+                .filter((comment) => comment.replyTo === null)
+                .map((comment) => (
+                  <Comments
+                    key={comment.id}
+                    comment={comment}
+                    threadId={threadId!}
+                    replies={(page.items as CommentItems[]).filter(
+                      (item) => item.replyTo === comment.messageNumber,
+                    )}
+                  />
+                ));
+        })}
+        {isFetchingNextPage ? (
+          <FeedSkeleton />
+        ) : (
+          hasNextPage && <div ref={ref} />
+        )}
+      </>
     </div>
   );
 }
