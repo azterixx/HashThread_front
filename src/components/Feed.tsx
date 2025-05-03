@@ -20,7 +20,6 @@ type FeedProps = {
 };
 
 export function Feed({ type = "threads", threadId }: FeedProps) {
-
   const queryKey = type === "threads" ? ["threads"] : ["comments", threadId];
   const { ref, inView, entry } = useInView();
   const {
@@ -44,6 +43,8 @@ export function Feed({ type = "threads", threadId }: FeedProps) {
         return undefined;
       }
     },
+    refetchInterval: 15_000,
+    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
@@ -66,9 +67,9 @@ export function Feed({ type = "threads", threadId }: FeedProps) {
       <>
         {data?.pages.map((page) => {
           return type === "threads"
-            ? (page.items as ThreadItems[]).map((item) => (
-                <Thread thread={item} key={item.id} />
-              ))
+            ? (page.items as ThreadItems[]).map((item) => {
+                return <Thread thread={item} key={item.id} />;
+              })
             : (page.items as CommentItems[])
                 .filter((comment) => comment.replyTo === null)
                 .map((comment) => (
