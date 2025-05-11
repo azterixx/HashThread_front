@@ -23,7 +23,9 @@ export const Thread = ({ thread }: ThreadComponentProps) => {
           <p className="custom-wrap-class font-inter text-m font-m leading-m text-textWhite">
             {thread.text}
           </p>
-
+          {thread.files &&
+            thread.files.length > 0 &&
+            thread.files.map((item) => <img src={item} />)}
           <div className="flex gap-1">
             <LikeButton
               onToggleLike={() => toggleLike()}

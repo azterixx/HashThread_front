@@ -6,6 +6,9 @@ import { cn } from "@/shared/lib/utils";
 import { useAutoResizeTextarea } from "@/shared/lib/hooks/useAutoResizeTextarea";
 import { postComment } from "@/shared/api/Comments/api";
 import { UserIcon } from "./UserIcon";
+import SharePhotoIcon from "@/icons/SharePhotoIcon";
+import { useRef, useState } from "react";
+import { ImagePreview } from "./ImagePreview";
 
 type CreateProps = {
   type?: "thread" | "comment";
@@ -22,12 +25,16 @@ export const CreateThreadAndComment = ({
 }: CreateProps) => {
   const queryClient = useQueryClient();
   const { textAreaRef, text, setText, handleChange } = useAutoResizeTextarea();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [imageFile, setImageFile] = useState<File[] | undefined>(undefined);
+
   // УЛУЧШИТЬ КОД В БУДУЩЕМ
   // для тредов
   const { mutate: threadMutate, isPending: isPendintThread } = useMutation({
-    mutationFn: postThread,
+    mutationFn: () => postThread(text, imageFile),
     onSuccess: () => {
       setText("");
+      setImageFile([]);
       textAreaRef.current!.style.height = "auto";
       queryClient.invalidateQueries({ queryKey: ["threads"] });
     },
@@ -48,7 +55,7 @@ export const CreateThreadAndComment = ({
     if (type === "comment") {
       commentMutate();
     } else {
-      threadMutate(text);
+      threadMutate();
     }
   };
   const isPending = type === "comment" ? isPendintComment : isPendintThread;
@@ -56,6 +63,18 @@ export const CreateThreadAndComment = ({
   // Функция для фокусировки на textarea
   const handleFocus = () => {
     textAreaRef.current?.focus();
+  };
+
+  const handleIconClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files) {
+      const fileArray = Array.from(files);
+      setImageFile((prev) => [...(prev ?? []), ...fileArray]);
+    }
   };
 
   return (
@@ -91,6 +110,24 @@ export const CreateThreadAndComment = ({
               {isPending ? "..." : "Post"}
             </Button>
           </div>
+          {imageFile && imageFile.length > 0 && (
+            <ImagePreview images={imageFile} />
+          )}
+          {type === "thread" && (
+            <div>
+              <SharePhotoIcon
+                onClick={handleIconClick}
+                className="cursor-pointer fill-textGray"
+              />
+              <input
+                type="file"
+                accept="image/*"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                className="hidden"
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

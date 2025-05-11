@@ -5,6 +5,7 @@ export interface ThreadItems {
   likeCount: number;
   isLiked: boolean;
   isOp: boolean;
+  files: string[];
 }
 interface Meta {
   totalItems: number;
