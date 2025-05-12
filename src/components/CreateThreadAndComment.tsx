@@ -85,7 +85,7 @@ export const CreateThreadAndComment = ({
         <UserIcon size={repliesTo ? "md" : "lg"} />
 
         {/* Блок с textarea и кнопкой */}
-        <div className="flex w-full flex-col gap-3">
+        <div className="flex w-full flex-col gap-1">
           <Textarea
             ref={textAreaRef}
             placeholder="Type something interesting here"
