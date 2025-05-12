@@ -6,12 +6,15 @@ import { useToggleLikeThread } from "@/shared/lib/hooks/useToggleLikeThread";
 import { UserIcon } from "./UserIcon";
 import { LikeButton } from "./LikeButton";
 import { CommentButton } from "./CommentButton";
+import { useState } from "react";
+import { ImageModal } from "./ImageModal";
 
 interface ThreadComponentProps {
   thread: ThreadItems;
 }
 export const Thread = ({ thread }: ThreadComponentProps) => {
   const { mutate: toggleLike, isPending } = useToggleLikeThread(thread.id);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   return (
     <div className="min-h-[96px] animate-fadeIn border-b-2 border-borderColor">
@@ -23,9 +26,20 @@ export const Thread = ({ thread }: ThreadComponentProps) => {
           <p className="custom-wrap-class font-inter text-m font-m leading-m text-textWhite">
             {thread.text}
           </p>
-          {thread.files &&
-            thread.files.length > 0 &&
-            thread.files.map((item) => <img src={item} />)}
+
+          <div className="flex gap-2 overflow-x-auto">
+            {thread.files &&
+              thread.files.length > 0 &&
+              thread.files.map((item) => (
+                <img
+                  onClick={() => setSelectedImage(item)}
+                  className="h-auto w-96 rounded-lg object-cover"
+                  src={item}
+                  key={item}
+                />
+              ))}
+          </div>
+          
           <div className="flex gap-1">
             <LikeButton
               onToggleLike={() => toggleLike()}
@@ -44,6 +58,12 @@ export const Thread = ({ thread }: ThreadComponentProps) => {
           </div>
         </div>
       </div>
+      {selectedImage && (
+        <ImageModal
+          selectedImage={selectedImage}
+          onClose={() => setSelectedImage(null)}
+        />
+      )}
     </div>
   );
 };

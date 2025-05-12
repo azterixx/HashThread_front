@@ -19,14 +19,11 @@ export const ImagePreview = ({ images }: ImagePreviewProps) => {
 
   return (
     <div className="flex flex-wrap gap-2">
-      {previews.map((src, index) => (
-        <div
-          key={index}
-          className="relative h-32 w-32"
-        >
+      {previews.map((src) => (
+        <div key={src} className="relative h-32 w-32">
           <img
             src={src}
-            alt={`preview-${index}`}
+            alt={`preview-${src}`}
             className="h-full w-full object-cover"
           />
         </div>
