@@ -13,15 +13,16 @@ import { getComments } from "@/shared/api/Comments/api";
 import { Comments } from "./Comment";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
+import { fetchLikedThreads } from "@/shared/api/LikedThreads/api";
 
 type FeedProps = {
-  type?: "threads" | "comments";
+  type?: "threads" | "comments" | "likedThreads";
   threadId?: string;
 };
 
 export function Feed({ type = "threads", threadId }: FeedProps) {
-  const queryKey = type === "threads" ? ["threads"] : ["comments", threadId];
   const { ref, inView, entry } = useInView();
+
   const {
     data,
     error,
@@ -30,7 +31,7 @@ export function Feed({ type = "threads", threadId }: FeedProps) {
     isFetchingNextPage,
     hasNextPage,
   } = useInfiniteQuery<ThreadType | CommentType>({
-    queryKey,
+    queryKey: type === "threads" ? ["threads"] : ["comments", threadId],
     queryFn: ({ pageParam }) =>
       type === "threads"
         ? fetchFeed(Number(pageParam))
@@ -43,52 +44,76 @@ export function Feed({ type = "threads", threadId }: FeedProps) {
         return undefined;
       }
     },
+    enabled: type !== "likedThreads",
+    refetchInterval: 15_000,
+    refetchOnWindowFocus: false,
+  });
+
+  const {
+    data: likedData,
+    isLoading: isLikedLoading,
+    error: likedError,
+  } = useQuery({
+    queryKey: ["likedThreads"],
+    queryFn: fetchLikedThreads,
+    enabled: type === "likedThreads",
     refetchInterval: 15_000,
     refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
-    if (entry && inView) {
+    if (entry && inView && type !== "likedThreads") {
       fetchNextPage();
     }
-  }, [entry]);
+  }, [entry, inView, type]);
 
-  if (isLoading) {
+  if (isLoading || isLikedLoading) {
+    return <FeedSkeleton />;
+  }
+
+  if (error || likedError) {
+    return <div>Error: {(error || likedError)?.message}</div>;
+  }
+
+  if (type === "likedThreads") {
+    if (!likedData || likedData.length === 0) {
+      return <div>No liked threads found.</div>;
+    }
+
+    likedData.map((item) => {
+      console.log(item);
+    });
+
     return (
-      <>
-        <FeedSkeleton />
-      </>
+      <div>
+        {likedData.map((item) => (
+          <Thread thread={item} key={item.id} />
+        ))}
+      </div>
     );
   }
-  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <div>
-      <>
-        {data?.pages.map((page) => {
-          return type === "threads"
-            ? (page.items as ThreadItems[]).map((item) => {
-                return <Thread thread={item} key={item.id} />;
-              })
-            : (page.items as CommentItems[])
-                .filter((comment) => comment.replyTo === null)
-                .map((comment) => (
-                  <Comments
-                    key={comment.id}
-                    comment={comment}
-                    threadId={threadId!}
-                    replies={(page.items as CommentItems[]).filter(
-                      (item) => item.replyTo === comment.messageNumber,
-                    )}
-                  />
-                ));
-        })}
-        {isFetchingNextPage ? (
-          <FeedSkeleton />
-        ) : (
-          hasNextPage && <div ref={ref} />
-        )}
-      </>
+      {data?.pages.map((page) => {
+        return type === "threads"
+          ? (page.items as ThreadItems[]).map((item) => (
+              <Thread thread={item} key={item.id} />
+            ))
+          : (page.items as CommentItems[])
+              .filter((comment) => comment.replyTo === null)
+              .map((comment) => (
+                <Comments
+                  key={comment.id}
+                  comment={comment}
+                  threadId={threadId!}
+                  replies={(page.items as CommentItems[]).filter(
+                    (item) => item.replyTo === comment.messageNumber,
+                  )}
+                />
+              ));
+      })}
+      {isFetchingNextPage ? <FeedSkeleton /> : hasNextPage && <div ref={ref} />}
     </div>
   );
 }
