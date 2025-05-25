@@ -1,8 +1,6 @@
-import BurningFlameIcon from "@/icons/BurningFlameIcon";
 import { cn, formatCount } from "@/shared/lib/utils";
-
 import { Button } from "./ui";
-import FlameIcon from "@/icons/FlameIcon";
+import Heart from "@/icons/HeartIcon";
 
 interface LikeButtonProps {
   onToggleLike: () => void;
@@ -18,8 +16,8 @@ export const LikeButton = ({
   likeCount,
 }: LikeButtonProps) => {
   return (
-    <Button onClick={onToggleLike} disabled={disabled}>
-      {isLiked ? <BurningFlameIcon /> : <FlameIcon />}
+    <Button onClick={onToggleLike} disabled={disabled} className="px-4">
+      <Heart className={cn(isLiked ? "fill-primaryGreen" : "fill-textGray")} />
       <span className={cn("text-textGray", isLiked && "text-primaryGreen")}>
         {formatCount(likeCount)}
       </span>

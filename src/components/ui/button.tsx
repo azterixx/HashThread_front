@@ -46,7 +46,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        <div className="flex items-center font-inter text-xs leading-xs">
+        <div className="flex items-center gap-1 font-inter text-xs leading-xs">
           {children}
         </div>
       </Comp>

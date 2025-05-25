@@ -19,7 +19,7 @@ export const CommentButton = ({
   const button = (
     <Button
       onClick={onClick}
-      className={cn("text-textGray", isActive && "text-primaryGreen")}
+      className={cn("text-textGray px-4", isActive && "text-primaryGreen")}
     >
       <MessageIcon />
       <span>{formatCount(count)}</span>
