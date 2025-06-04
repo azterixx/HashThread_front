@@ -1,3 +1,4 @@
+import { SortType } from "@/shared/store/Switcher";
 import { baseInstance } from "../base";
 import { CommentType, PostCommentResponse } from "../types/types";
 
@@ -14,11 +15,16 @@ export const postComment = async (
     })
   ).data;
 
-export const getComments = async (threadId: string, page: number) =>
+export const getComments = async (
+  threadId: string,
+  page: number,
+  sort: SortType = "popular",
+) =>
   (
     await baseInstance.get<CommentType>(`/comment/${threadId}`, {
       params: {
         page,
+        sort,
       },
     })
   ).data;

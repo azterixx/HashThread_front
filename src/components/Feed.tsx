@@ -14,15 +14,16 @@ import { Comments } from "./Comment";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 import { fetchLikedThreads } from "@/shared/api/LikedThreads/api";
+import { useSwitcher } from "@/shared/store/Switcher";
 
 type FeedProps = {
   type?: "threads" | "comments" | "likedThreads";
   threadId?: string;
 };
 
-export function Feed({ type = "threads", threadId }: FeedProps) {
+export const Feed = ({ type = "threads", threadId }: FeedProps) => {
   const { ref, inView, entry } = useInView();
-
+  const sortType = useSwitcher((state) => state.sort);
   const {
     data,
     error,
@@ -31,11 +32,12 @@ export function Feed({ type = "threads", threadId }: FeedProps) {
     isFetchingNextPage,
     hasNextPage,
   } = useInfiniteQuery<ThreadType | CommentType>({
-    queryKey: type === "threads" ? ["threads"] : ["comments", threadId],
+    queryKey:
+      type === "threads" ? ["threads"] : ["comments", threadId, sortType],
     queryFn: ({ pageParam }) =>
       type === "threads"
         ? fetchFeed(Number(pageParam))
-        : getComments(threadId ?? "", Number(pageParam)),
+        : getComments(threadId ?? "", Number(pageParam), sortType),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       if (Number(lastPage.meta.currentPage) < lastPage.meta.totalPages) {
@@ -98,7 +100,11 @@ export function Feed({ type = "threads", threadId }: FeedProps) {
       {data?.pages.map((page) => {
         return type === "threads"
           ? (page.items as ThreadItems[]).map((item) => (
-              <Thread thread={item} key={item.id} />
+              <Thread
+                thread={item}
+                key={item.id}
+                href={`/comments/${item.id}`}
+              />
             ))
           : (page.items as CommentItems[])
               .filter((comment) => comment.replyTo === null)

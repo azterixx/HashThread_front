@@ -12,6 +12,7 @@ export const useToggleLikeThread = (threadId: string) => {
     mutationFn: () => toggleLikeThread(threadId),
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ["threads"] });
+
       const previousData = queryClient.getQueryData<InfiniteData<ThreadType>>([
         "threads",
       ]);
@@ -37,12 +38,17 @@ export const useToggleLikeThread = (threadId: string) => {
           };
         },
       );
+
       return { previousData };
     },
     onError: (err, vars, context) => {
       if (context?.previousData) {
         queryClient.setQueryData(["threads"], context.previousData);
       }
+    },
+    onSuccess: () => {
+      // ⬇️ Инвалидируем только конкретный тред
+      queryClient.invalidateQueries({ queryKey: ["thread", threadId] });
     },
   });
 };

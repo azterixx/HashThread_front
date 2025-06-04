@@ -7,7 +7,7 @@ import { useAutoResizeTextarea } from "@/shared/lib/hooks/useAutoResizeTextarea"
 import { postComment } from "@/shared/api/Comments/api";
 import { UserIcon } from "./UserIcon";
 import SharePhotoIcon from "@/icons/SharePhotoIcon";
-import { useRef, useState } from "react";
+import { memo, useRef, useState } from "react";
 import { ImagePreview } from "./ImagePreview";
 
 type CreateProps = {
@@ -17,7 +17,7 @@ type CreateProps = {
   onCancel?: () => void;
 };
 
-export const CreateThreadAndComment = ({
+export const CreateThreadAndComment = memo(({
   type,
   threadId,
   repliesTo,
@@ -46,6 +46,7 @@ export const CreateThreadAndComment = ({
       setText("");
       textAreaRef.current!.style.height = "auto";
       queryClient.invalidateQueries({ queryKey: ["comments", threadId] });
+      queryClient.invalidateQueries({ queryKey: ["thread", threadId] });
     },
   });
 
@@ -132,4 +133,4 @@ export const CreateThreadAndComment = ({
       </div>
     </div>
   );
-};
+});
