@@ -1,5 +1,5 @@
 import { baseInstance } from "../base";
-import { PostThreadResponse } from "../types/types";
+import { PostThreadResponse, ThreadItems } from "../types/types";
 
 export const postThread = async (text: string, files?: File[]) => {
   const formData = new FormData();
@@ -18,6 +18,9 @@ export const postThread = async (text: string, files?: File[]) => {
 
   return response.data;
 };
+
+export const getThread = async (id?: string) =>
+  (await baseInstance.get<ThreadItems>(`/thread/${id}`)).data;
 
 export const toggleLikeThread = async (threadId: string) =>
   (

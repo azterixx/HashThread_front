@@ -1,10 +1,11 @@
 import { cn } from "@/shared/lib/utils";
+import { memo } from "react";
 
 interface UserIconProps {
   size: "lg" | "md";
 }
 
-export const UserIcon = ({ size }: UserIconProps) => {
+export const UserIcon = memo(({ size }: UserIconProps) => {
   return (
     <div>
       <div
@@ -16,4 +17,4 @@ export const UserIcon = ({ size }: UserIconProps) => {
       />
     </div>
   );
-};
+});

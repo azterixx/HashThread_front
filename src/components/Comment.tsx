@@ -1,14 +1,15 @@
-import { Button, Textarea } from "./ui";
+import { Button } from "./ui";
 import ShareIcon from "../icons/ShareIcon";
 import { CommentItems, CommentType } from "@/shared/api/types/types";
 import { useToggleLikeComment } from "@/shared/lib/hooks/useToggleLikeComment";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { UserIcon } from "./UserIcon";
 import { LikeButton } from "./LikeButton";
 import { CommentButton } from "./CommentButton";
-
 import { CreateThreadAndComment } from "./CreateThreadAndComment";
 import { ReplyItem } from "./ReplyItem";
+import { useQuery } from "@tanstack/react-query";
+import { getThread } from "@/shared/api/Thread/api";
 
 type CommentProps = {
   comment: CommentItems;
@@ -16,7 +17,7 @@ type CommentProps = {
   replies?: CommentItems[];
 };
 
-export const Comments = ({ comment, threadId, replies }: CommentProps) => {
+export const Comments = memo(({ comment, threadId, replies }: CommentProps) => {
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const { mutate: toggleLikeComment, isPending } = useToggleLikeComment(
     comment.id,
@@ -45,7 +46,7 @@ export const Comments = ({ comment, threadId, replies }: CommentProps) => {
               <CommentButton
                 count={replies?.length || 0}
                 isActive={isCommentOpen}
-                onClick={() => setIsCommentOpen(true)}
+                onClick={() => setIsCommentOpen(!isCommentOpen)}
               />
               <Button>
                 <ShareIcon />
@@ -82,4 +83,4 @@ export const Comments = ({ comment, threadId, replies }: CommentProps) => {
       )}
     </>
   );
-};
+});

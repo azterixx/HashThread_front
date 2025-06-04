@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button } from "./ui";
 import { cn, formatCount } from "@/shared/lib/utils";
 import MessageIcon from "@/icons/MessageIcon";
+import { memo } from "react";
 
 interface CommentButtonProps {
   count: number;
@@ -9,22 +10,18 @@ interface CommentButtonProps {
   href?: string;
   onClick?: () => void;
 }
-export const CommentButton = ({
-  count,
-  isActive,
-  href,
-  onClick,
-}: CommentButtonProps) => {
-  
-  const button = (
-    <Button
-      onClick={onClick}
-      className={cn("text-textGray px-4", isActive && "text-primaryGreen")}
-    >
-      <MessageIcon />
-      <span>{formatCount(count)}</span>
-    </Button>
-  );
+export const CommentButton = memo(
+  ({ count, isActive, href, onClick }: CommentButtonProps) => {
+    const button = (
+      <Button
+        onClick={onClick}
+        className={cn("px-4 text-textGray", isActive && "text-primaryGreen")}
+      >
+        <MessageIcon />
+        <span>{formatCount(count)}</span>
+      </Button>
+    );
 
-  return href ? <Link href={href}>{button}</Link> : button;
-};
+    return href ? <Link href={href}>{button}</Link> : button;
+  },
+);

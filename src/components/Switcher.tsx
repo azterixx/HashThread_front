@@ -1,29 +1,30 @@
 "use client";
 import { cn } from "@/shared/lib/utils";
-import { useState } from "react";
+import { useSwitcher } from "@/shared/store/Switcher";
+import { memo } from "react";
 
-export const Switcher = () => {
-  const [isActive, setIsActive] = useState("popular");
+export const Switcher = memo(() => {
+  const { setSort, sort } = useSwitcher();
   return (
-    <div className="rounded-lg bg-bgDark p-[2px]">
+    <div className="rounded-lg border-[1px] border-borderColor bg-bgDark p-[2px]">
       <button
-        onClick={() => setIsActive("popular")}
+        onClick={() => setSort("popular")}
         className={cn(
           "px-3 py-1 text-textGray",
-          isActive === "popular" && "rounded-lg bg-[#CCCCCC] text-bgDarker",
+          sort === "popular" && "rounded-lg bg-[#CCCCCC] text-bgDarker",
         )}
       >
         Popular
       </button>
       <button
-        onClick={() => setIsActive("all")}
+        onClick={() => setSort("new")}
         className={cn(
           "px-3 py-1 text-textGray",
-          isActive === "all" && "rounded-lg bg-[#CCCCCC] text-bgDarker",
+          sort === "new" && "rounded-lg bg-[#CCCCCC] text-bgDarker",
         )}
       >
-        All
+        New
       </button>
     </div>
   );
-};
+});

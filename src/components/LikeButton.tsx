@@ -1,6 +1,8 @@
 import { cn, formatCount } from "@/shared/lib/utils";
 import { Button } from "./ui";
-import Heart from "@/icons/HeartIcon";
+import FlameIcon from "@/icons/FlameIcon";
+import BurningFlameIcon from "@/icons/BurningFlameIcon";
+import { memo } from "react";
 
 interface LikeButtonProps {
   onToggleLike: () => void;
@@ -9,18 +11,19 @@ interface LikeButtonProps {
   disabled?: boolean;
 }
 
-export const LikeButton = ({
-  onToggleLike,
-  disabled,
-  isLiked,
-  likeCount,
-}: LikeButtonProps) => {
-  return (
-    <Button onClick={onToggleLike} disabled={disabled} className="px-4">
-      <Heart className={cn(isLiked ? "fill-primaryGreen" : "fill-textGray")} />
-      <span className={cn("text-textGray", isLiked && "text-primaryGreen")}>
-        {formatCount(likeCount)}
-      </span>
-    </Button>
-  );
-};
+export const LikeButton = memo(
+  ({ onToggleLike, disabled, isLiked, likeCount }: LikeButtonProps) => {
+    return (
+      <Button onClick={onToggleLike} disabled={disabled} className="px-4">
+        {isLiked ? (
+          <BurningFlameIcon className="text-primaryGreen" />
+        ) : (
+          <FlameIcon className={"text-textGray"} />
+        )}
+        <span className={cn("text-textGray", isLiked && "text-primaryGreen")}>
+          {formatCount(likeCount)}
+        </span>
+      </Button>
+    );
+  },
+);
