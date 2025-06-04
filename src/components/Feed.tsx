@@ -15,6 +15,8 @@ import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 import { fetchLikedThreads } from "@/shared/api/LikedThreads/api";
 import { useSwitcher } from "@/shared/store/Switcher";
+import { useToogleComments } from "@/shared/store/ToogleComments";
+import { comment } from "postcss";
 
 type FeedProps = {
   type?: "threads" | "comments" | "likedThreads";
@@ -81,15 +83,10 @@ export const Feed = ({ type = "threads", threadId }: FeedProps) => {
     if (!likedData || likedData.length === 0) {
       return <div>No liked threads found.</div>;
     }
-
-    likedData.map((item) => {
-      console.log(item);
-    });
-
     return (
       <div>
         {likedData.map((item) => (
-          <Thread thread={item} key={item.id} />
+          <Thread thread={item} key={item.id} href={`/${item._id}`} />
         ))}
       </div>
     );
@@ -103,7 +100,7 @@ export const Feed = ({ type = "threads", threadId }: FeedProps) => {
               <Thread
                 thread={item}
                 key={item.id}
-                href={`/comments/${item.id}`}
+                href={`/${item.id}`}
               />
             ))
           : (page.items as CommentItems[])
@@ -122,4 +119,4 @@ export const Feed = ({ type = "threads", threadId }: FeedProps) => {
       {isFetchingNextPage ? <FeedSkeleton /> : hasNextPage && <div ref={ref} />}
     </div>
   );
-}
+};

@@ -15,18 +15,21 @@ interface ThreadComponentProps {
   thread: ThreadItems;
   border?: boolean;
   href?: string;
+  type?: "threadPage";
 }
 export const Thread = memo(
-  ({ thread, border = true, href }: ThreadComponentProps) => {
+  ({ thread, border = true, href, type }: ThreadComponentProps) => {
     const { mutate: toggleLike, isPending } = useToggleLikeThread(thread.id);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
     const setIsActive = useToogleComments((state) => state.setIsActive);
     const isActive = useToogleComments((state) => state.isActive);
 
-    useEffect(() => {
-      setIsActive(false);
-    }, []);
+    const toggleComment = () => {
+      if (type === "threadPage") {
+        setIsActive(!isActive);
+      }
+    };
 
     return (
       <div
@@ -68,7 +71,7 @@ export const Thread = memo(
                 href={href}
                 isActive={isActive}
                 count={thread.messageCount}
-                onClick={() => setIsActive(!isActive)}
+                onClick={toggleComment}
               />
 
               <Button>

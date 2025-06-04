@@ -1,5 +1,6 @@
 export interface ThreadItems {
   id: string;
+  _id: string;
   text: string;
   messageCount: number;
   likeCount: number;
