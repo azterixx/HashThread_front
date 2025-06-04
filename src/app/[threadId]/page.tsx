@@ -1,6 +1,6 @@
-import { CreateThreadAndComment } from "@/components/CreateThreadAndComment";
 import { Feed } from "@/components/Feed";
 import { Switcher } from "@/components/Switcher";
+import { ThreadWrapper } from "@/components/ThreadWrapper";
 
 export default async function CommentsPage({
   params,
@@ -10,15 +10,19 @@ export default async function CommentsPage({
   const { threadId } = await params;
 
   return (
-    <div className="mx-auto w-full overflow-y-auto bg-bgDark md:w-1/2">
-      <div className="flex items-center justify-between px-3">
-        <h3 className="py-4 text-xl text-white">Comments</h3>
-        <Switcher />
+    <div className="mt-3 flex flex-col items-center gap-4">
+      <div className="w-full rounded-lg bg-bgDark md:w-1/2">
+        <ThreadWrapper threadId={threadId} />
       </div>
-      <div className="border-b border-borderColor">
-        <CreateThreadAndComment type="comment" threadId={threadId} />
+
+      <div className="flex w-full flex-col gap-3 overflow-y-auto rounded-lg bg-bgDark md:w-1/2">
+        <div className="flex items-center justify-between px-3">
+          <h3 className="py-4 text-xl text-white">Comments</h3>
+          <Switcher />
+        </div>
+
+        <Feed type="comments" threadId={threadId} />
       </div>
-      <Feed type="comments" threadId={threadId} />
     </div>
   );
 }

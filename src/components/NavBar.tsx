@@ -7,7 +7,6 @@ import Logo from "@/icons/LogoIcon.png";
 
 export const NavBar = () => {
   const pathname = usePathname();
-  const isCommentsPage = pathname.startsWith("/comments/");
   return (
     <>
       <nav className={"flex h-[56px] w-full"}>
@@ -25,23 +24,22 @@ export const NavBar = () => {
             "flex flex-[2] border-x-[1px] border-b-[1px] border-borderColor"
           }
         >
-          {!isCommentsPage &&
-            HEADER_MENU.map((item) => (
-              <Link
-                className={cn(
-                  "flex flex-1 cursor-pointer items-center justify-center",
-                  pathname === item.href && "border-b-2 border-textWhite",
-                )}
-                href={item.href}
-                key={item.href}
-              >
-                <item.icon
-                  className={
-                    pathname === item.href ? "fill-white" : "fill-textGray"
-                  }
-                />
-              </Link>
-            ))}
+          {HEADER_MENU.map((item) => (
+            <Link
+              className={cn(
+                "flex flex-1 cursor-pointer items-center justify-center",
+                pathname === item.href && "border-b-2 border-textWhite",
+              )}
+              href={item.href}
+              key={item.href}
+            >
+              <item.icon
+                className={
+                  pathname === item.href ? "fill-white" : "fill-textGray"
+                }
+              />
+            </Link>
+          ))}
         </div>
         <div
           className={"h-full flex-1 border-b-[1px] border-borderColor"}
