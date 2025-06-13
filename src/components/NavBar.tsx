@@ -35,11 +35,22 @@ export const NavBar = () => {
             >
               <item.icon
                 className={
-                  pathname === item.href ? "fill-white" : "fill-textGray"
+                  pathname === item.href
+                    ? "fill-white text-white"
+                    : "fill-textGray text-textGray"
                 }
               />
             </Link>
           ))}
+          <Link
+            className={cn(
+              "flex flex-1 cursor-pointer items-center justify-center text-white",
+              pathname === "/hot" && "border-b-2 border-textWhite",
+            )}
+            href={"/hot"}
+          >
+            Hot
+          </Link>
         </div>
         <div
           className={"h-full flex-1 border-b-[1px] border-borderColor"}

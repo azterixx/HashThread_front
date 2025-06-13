@@ -1,4 +1,4 @@
-import Heart from "@/icons/HeartIcon";
+import FlameIcon from "@/icons/FlameIcon";
 import Home from "@/icons/HomeIcon";
 export const HEADER_MENU = [
   {
@@ -7,6 +7,6 @@ export const HEADER_MENU = [
   },
   {
     href: "/liked",
-    icon: Heart,
+    icon: FlameIcon,
   },
 ];
