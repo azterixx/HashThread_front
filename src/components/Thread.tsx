@@ -11,6 +11,7 @@ import { ImageModal } from "./ImageModal";
 import { cn } from "@/shared/lib/utils";
 import { useToogleComments } from "@/shared/store/ToogleComments";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { toast, Bounce } from "react-toastify";
 
 import "swiper/css";
 
@@ -32,6 +33,18 @@ export const Thread = memo(
       if (type === "threadPage") {
         setIsActive(!isActive);
       }
+    };
+
+    const handleShare = () => {
+      const threadLink = `${window.location.origin}/${thread.id}`;
+      navigator.clipboard
+        .writeText(threadLink)
+        .then(() => {
+          toast("🔗 Link copied!");
+        })
+        .catch(() => {
+          toast("❌ Failed to copy.");
+        });
     };
 
     return (
@@ -56,7 +69,7 @@ export const Thread = memo(
                   <SwiperSlide key={item}>
                     <img
                       onClick={() => setSelectedImage(item)}
-                      className="h-60 w-full cursor-pointer rounded-lg object-cover"
+                      className="h-60 w-full cursor-pointer select-none rounded-lg object-cover"
                       src={item}
                     />
                   </SwiperSlide>
@@ -78,7 +91,7 @@ export const Thread = memo(
                 onClick={toggleComment}
               />
 
-              <Button>
+              <Button onClick={handleShare}>
                 <ShareIcon />
               </Button>
             </div>
