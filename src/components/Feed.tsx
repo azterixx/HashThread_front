@@ -17,6 +17,7 @@ import { fetchLikedThreads } from "@/shared/api/LikedThreads/api";
 import { useSwitcher } from "@/shared/store/Switcher";
 import { useToogleComments } from "@/shared/store/ToogleComments";
 import { comment } from "postcss";
+import { Bounce, ToastContainer } from "react-toastify";
 
 type FeedProps = {
   type?: "threads" | "comments" | "likedThreads";

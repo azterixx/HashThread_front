@@ -48,9 +48,6 @@ export const Comments = memo(({ comment, threadId, replies }: CommentProps) => {
                 isActive={isCommentOpen}
                 onClick={() => setIsCommentOpen(!isCommentOpen)}
               />
-              <Button>
-                <ShareIcon />
-              </Button>
             </div>
           </div>
         </div>
