@@ -10,6 +10,9 @@ import { memo, useEffect, useState } from "react";
 import { ImageModal } from "./ImageModal";
 import { cn } from "@/shared/lib/utils";
 import { useToogleComments } from "@/shared/store/ToogleComments";
+import { Swiper, SwiperSlide } from "swiper/react";
+
+import "swiper/css";
 
 interface ThreadComponentProps {
   thread: ThreadItems;
@@ -40,24 +43,25 @@ export const Thread = memo(
       >
         <div className="flex gap-3 p-4">
           <UserIcon size="lg" />
-          <div className="flex w-full flex-col gap-3">
+          <div className="flex w-full flex-col gap-3 overflow-hidden">
             <span className="font-medium text-white">Anonym</span>
 
             <p className="custom-wrap-class font-inter text-m font-m leading-m text-textWhite">
               {thread.text}
             </p>
 
-            <div className="scrollbar-hide flex gap-2 overflow-x-auto">
-              {thread.files &&
-                thread.files.length > 0 &&
-                thread.files.map((item) => (
-                  <img
-                    onClick={() => setSelectedImage(item)}
-                    className="h-auto w-96 rounded-lg object-cover"
-                    src={item}
-                    key={item}
-                  />
+            <div>
+              <Swiper spaceBetween={8} slidesPerView={3} freeMode={true}>
+                {thread.files?.map((item) => (
+                  <SwiperSlide key={item}>
+                    <img
+                      onClick={() => setSelectedImage(item)}
+                      className="h-60 w-full cursor-pointer rounded-lg object-cover"
+                      src={item}
+                    />
+                  </SwiperSlide>
                 ))}
+              </Swiper>
             </div>
 
             <div className="flex gap-1">
