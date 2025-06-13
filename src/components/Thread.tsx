@@ -47,7 +47,7 @@ export const Thread = memo(
               {thread.text}
             </p>
 
-            <div className="flex gap-2 overflow-x-auto">
+            <div className="scrollbar-hide flex gap-2 overflow-x-auto">
               {thread.files &&
                 thread.files.length > 0 &&
                 thread.files.map((item) => (
