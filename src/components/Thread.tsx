@@ -12,6 +12,7 @@ import { cn } from "@/shared/lib/utils";
 import { useToogleComments } from "@/shared/store/ToogleComments";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { toast, Bounce } from "react-toastify";
+import { CopyIcon } from "@/icons/CopyIcon";
 
 import "swiper/css";
 
@@ -40,10 +41,21 @@ export const Thread = memo(
       navigator.clipboard
         .writeText(threadLink)
         .then(() => {
-          toast("🔗 Link copied!");
+          toast(
+            <div className="flex items-center gap-2">
+              <CopyIcon />
+              <span>Link copied!</span>
+            </div>,
+            {
+              className: "toast-custom-style",
+              icon: false,
+            },
+          );
         })
         .catch(() => {
-          toast("❌ Failed to copy.");
+          toast("❌ Failed to copy.", {
+            className: "bg-Gray-dark",
+          });
         });
     };
 
@@ -54,6 +66,7 @@ export const Thread = memo(
           border && "border-b-2 border-borderColor",
         )}
       >
+        
         <div className="flex gap-3 p-4">
           <UserIcon size="lg" />
           <div className="flex w-full flex-col gap-3 overflow-hidden">
