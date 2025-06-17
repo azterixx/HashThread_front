@@ -1,4 +1,4 @@
-import { cn } from "@/shared/lib/utils";
+import Avatar from "boring-avatars";
 import { memo } from "react";
 
 interface UserIconProps {
@@ -6,15 +6,25 @@ interface UserIconProps {
 }
 
 export const UserIcon = memo(({ size }: UserIconProps) => {
+  const avatarSize = size === "lg" ? 36 : 24;
+
+  const variant = [
+    "beam",
+    "marble",
+    "beam",
+    "pixel",
+    "sunset",
+    "ring",
+    "bauhaus",
+  ] as const;
+
+  const randomVariant = variant[Math.floor(Math.random() * variant.length)];
+
   return (
-    <div>
-      <div
-        className={cn(
-          "rounded-full bg-[#999999]",
-          size === "lg" && "h-9 w-9",
-          size === "md" && "h-6 w-6",
-        )}
-      />
-    </div>
+    <Avatar
+      size={avatarSize}
+      name={Math.random().toString()}
+      variant={randomVariant}
+    />
   );
 });
