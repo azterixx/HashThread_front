@@ -7,24 +7,26 @@ interface UserIconProps {
 
 export const UserIcon = memo(({ size }: UserIconProps) => {
   const avatarSize = size === "lg" ? 36 : 24;
+  const randomName = Math.random().toString();
 
-  const variant = [
-    "beam",
-    "marble",
-    "beam",
-    "pixel",
-    "sunset",
-    "ring",
-    "bauhaus",
-  ] as const;
+  const colors = [
+    "#52FB18",
+    "#2E2E2E",
+    "#F3F5F7",
+    "#999999",
+    "#1E1E1E",
+    "#323232",
+  ];
 
-  const randomVariant = variant[Math.floor(Math.random() * variant.length)];
+  const variants = ["beam", "bauhaus", "marble", "pixel"] as const;
+  const randomVariant = variants[Math.floor(Math.random() * variants.length)];
 
   return (
     <Avatar
       size={avatarSize}
-      name={Math.random().toString()}
+      name={randomName}
       variant={randomVariant}
+      colors={colors}
     />
   );
 });
