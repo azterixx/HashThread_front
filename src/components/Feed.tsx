@@ -77,19 +77,27 @@ export const Feed = ({ type = "threads", threadId, sort }: FeedProps) => {
     return <FeedSkeleton />;
   }
 
-  if (error || likedError) {
-    return <div>Error: {(error || likedError)?.message}</div>;
-  }
-
   if (type === "likedThreads") {
     if (!likedData || likedData.length === 0) {
-      return <div>No liked threads found.</div>;
+      return (
+        <div className="flex justify-center p-5 text-[50px] text-textWhite">
+          No liked threads found
+        </div>
+      );
     }
     return (
       <div>
         {likedData.map((item) => (
           <Thread thread={item} key={item.id} href={`/${item._id}`} />
         ))}
+      </div>
+    );
+  }
+
+  if (!data?.pages.some((page) => page.items.length > 0)) {
+    return (
+      <div className="flex justify-center p-5 text-[40px] text-textWhite">
+        There's nothing here yet
       </div>
     );
   }
