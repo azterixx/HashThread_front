@@ -2,7 +2,7 @@ import { Button } from "./ui";
 import ShareIcon from "../icons/ShareIcon";
 import { CommentItems, CommentType } from "@/shared/api/types/types";
 import { useToggleLikeComment } from "@/shared/lib/hooks/useToggleLikeComment";
-import { memo, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { UserIcon } from "./UserIcon";
 import { LikeButton } from "./LikeButton";
 import { CommentButton } from "./CommentButton";
@@ -19,10 +19,18 @@ type CommentProps = {
 
 export const Comments = memo(({ comment, threadId, replies }: CommentProps) => {
   const [isCommentOpen, setIsCommentOpen] = useState(false);
+  const [isShowOpStatus, setIsShowOpStatus] = useState(false);
+
   const { mutate: toggleLikeComment, isPending } = useToggleLikeComment(
     comment.id,
     threadId,
   );
+
+  const onChangeOpStatus = useCallback((value: boolean) => {
+    setIsShowOpStatus(value);
+  }, []);
+
+  console.log(isShowOpStatus);
 
   return (
     <>
@@ -30,7 +38,14 @@ export const Comments = memo(({ comment, threadId, replies }: CommentProps) => {
         <div className="flex gap-3 p-4">
           <UserIcon size="lg" />
           <div className="flex w-full flex-col gap-3">
-            <span className="font-medium text-white">Anonym</span>
+            <span className="font-medium text-white">
+              Anonym{" "}
+              {comment.isOp && (
+                <span className="font-medium leading-m text-primaryGreen">
+                  OP
+                </span>
+              )}
+            </span>
 
             <p className="custom-wrap-class font-inter text-m font-m leading-m text-textWhite">
               {comment.text}
@@ -60,6 +75,8 @@ export const Comments = memo(({ comment, threadId, replies }: CommentProps) => {
               <CreateThreadAndComment
                 threadId={threadId}
                 type="comment"
+                opStatus={isShowOpStatus}
+                setOpStatus={onChangeOpStatus}
                 onCancel={() => setIsCommentOpen(false)}
                 repliesTo={comment.messageNumber}
               />

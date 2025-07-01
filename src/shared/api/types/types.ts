@@ -17,6 +17,7 @@ interface Meta {
 
 export interface CommentItems {
   id: string;
+  isOp: boolean;
   text: string;
   messageNumber: number;
   likeCount: number;
