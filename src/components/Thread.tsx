@@ -1,17 +1,17 @@
 "use client";
 import ShareIcon from "../icons/ShareIcon";
 import { Button } from "./ui/button";
-import { ThreadItems, ThreadType } from "@/shared/api/types/types";
+import { ThreadItems } from "@/shared/api/types/types";
 import { useToggleLikeThread } from "@/shared/lib/hooks/useToggleLikeThread";
 import { UserIcon } from "./UserIcon";
 import { LikeButton } from "./LikeButton";
 import { CommentButton } from "./CommentButton";
-import { memo, useEffect, useState } from "react";
+import { memo, useState } from "react";
 import { ImageModal } from "./ImageModal";
 import { cn } from "@/shared/lib/utils";
 import { useToogleComments } from "@/shared/store/ToogleComments";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { toast, Bounce } from "react-toastify";
+import { toast } from "react-toastify";
 import { CopyIcon } from "@/icons/CopyIcon";
 
 import "swiper/css";
@@ -25,7 +25,9 @@ interface ThreadComponentProps {
 export const Thread = memo(
   ({ thread, border = true, href, type }: ThreadComponentProps) => {
     const { mutate: toggleLike, isPending } = useToggleLikeThread(thread.id);
-    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
+      null,
+    );
 
     const setIsActive = useToogleComments((state) => state.setIsActive);
     const isActive = useToogleComments((state) => state.isActive);
@@ -66,7 +68,6 @@ export const Thread = memo(
           border && "border-b-2 border-borderColor",
         )}
       >
-        
         <div className="flex gap-3 p-4">
           <UserIcon size="lg" />
           <div className="flex w-full flex-col gap-3 overflow-hidden">
@@ -78,10 +79,10 @@ export const Thread = memo(
 
             <div>
               <Swiper spaceBetween={8} slidesPerView={3} freeMode={true}>
-                {thread.files?.map((item) => (
+                {thread.files?.map((item, index) => (
                   <SwiperSlide key={item}>
                     <img
-                      onClick={() => setSelectedImage(item)}
+                      onClick={() => setSelectedImageIndex(index)}
                       className="h-60 w-full cursor-pointer select-none rounded-lg object-cover"
                       src={item}
                     />
@@ -110,10 +111,11 @@ export const Thread = memo(
             </div>
           </div>
         </div>
-        {selectedImage && (
+        {selectedImageIndex !== null && (
           <ImageModal
-            selectedImage={selectedImage}
-            onClose={() => setSelectedImage(null)}
+            images={thread.files}
+            selectedImageIndex={selectedImageIndex}
+            onClose={() => setSelectedImageIndex(null)}
           />
         )}
       </div>

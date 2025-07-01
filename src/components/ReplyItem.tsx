@@ -17,9 +17,14 @@ export const ReplyItem = ({ reply, threadId }: ReplyItemProps) => {
 
   return (
     <div className="flex gap-3 p-4" key={reply.id}>
-      <UserIcon size="md"/>
+      <UserIcon size="md" />
       <div className="flex w-full flex-col gap-3">
-        <span className="font-medium text-white">Anonym</span>
+        <p className="font-medium text-white">
+          Anonym{" "}
+          {reply.isOp && (
+            <span className="font-medium leading-m text-primaryGreen">OP</span>
+          )}
+        </p>
 
         <p className="custom-wrap-class font-inter text-m font-m leading-m text-textWhite">
           {reply.text}
