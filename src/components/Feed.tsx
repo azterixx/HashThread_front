@@ -80,7 +80,7 @@ export const Feed = ({ type = "threads", threadId, sort }: FeedProps) => {
   if (type === "likedThreads") {
     if (!likedData || likedData.length === 0) {
       return (
-        <div className="flex justify-center p-5 text-[50px] text-textWhite">
+        <div className="flex justify-center p-5 text-[40px] text-textWhite">
           No liked threads found
         </div>
       );
