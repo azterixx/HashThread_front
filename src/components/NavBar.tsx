@@ -19,7 +19,7 @@ export const NavBar = () => {
           <img src={Logo.src} width={36} />
           <p className="text-2xl text-textWhite">HashThread</p>
         </Link>
-        <div
+        <ul
           className={
             "flex flex-[2] border-x-[1px] border-b-[1px] border-borderColor"
           }
@@ -34,24 +34,17 @@ export const NavBar = () => {
               key={item.href}
             >
               <item.icon
-                className={
+                className={cn(
                   pathname === item.href
                     ? "fill-white text-white"
-                    : "fill-textGray text-textGray"
-                }
+                    : "fill-textGray text-textGray",
+                  "w-6",
+                  "h-6",
+                )}
               />
             </Link>
           ))}
-          <Link
-            className={cn(
-              "flex flex-1 cursor-pointer items-center justify-center text-white",
-              pathname === "/hot" && "border-b-2 border-textWhite",
-            )}
-            href={"/hot"}
-          >
-            Hot
-          </Link>
-        </div>
+        </ul>
         <div
           className={"h-full flex-1 border-b-[1px] border-borderColor"}
         ></div>

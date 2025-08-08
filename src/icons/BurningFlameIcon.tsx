@@ -1,4 +1,3 @@
-import * as React from "react";
 import { SVGProps } from "react";
 
 interface BurningFlameIconProps extends SVGProps<SVGSVGElement> {
