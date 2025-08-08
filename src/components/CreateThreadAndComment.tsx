@@ -9,26 +9,17 @@ import { UserIcon } from "./UserIcon";
 import SharePhotoIcon from "@/icons/SharePhotoIcon";
 import { memo, useRef, useState } from "react";
 import { ImagePreview } from "./ImagePreview";
-
+import { CircularTextLimit } from "./CircularTextLimit";
 
 type CreateProps = {
   type?: "thread" | "comment";
   threadId?: string;
   repliesTo?: number;
   onCancel?: () => void;
-  opStatus?: boolean;
-  setOpStatus?: (value: boolean) => void;
 };
 
 export const CreateThreadAndComment = memo(
-  ({
-    type,
-    threadId,
-    repliesTo,
-    onCancel,
-    opStatus,
-    setOpStatus,
-  }: CreateProps) => {
+  ({ type, threadId, repliesTo, onCancel }: CreateProps) => {
     const queryClient = useQueryClient();
     const { textAreaRef, text, setText, handleChange } =
       useAutoResizeTextarea();
@@ -101,9 +92,8 @@ export const CreateThreadAndComment = memo(
               onChange={handleChange}
               rows={1}
             />
-            <div
-              className={cn("flex w-full justify-end", repliesTo && "gap-2")}
-            >
+            <div className={cn("flex w-full items-center justify-end gap-2")}>
+              <CircularTextLimit textLength={text.length} />
               {repliesTo && (
                 <Button onClick={onCancel} variant={"create"}>
                   Cancel
