@@ -19,18 +19,11 @@ type CommentProps = {
 
 export const Comments = memo(({ comment, threadId, replies }: CommentProps) => {
   const [isCommentOpen, setIsCommentOpen] = useState(false);
-  const [isShowOpStatus, setIsShowOpStatus] = useState(false);
 
   const { mutate: toggleLikeComment, isPending } = useToggleLikeComment(
     comment.id,
     threadId,
   );
-
-  const onChangeOpStatus = useCallback((value: boolean) => {
-    setIsShowOpStatus(value);
-  }, []);
-
-  console.log(isShowOpStatus);
 
   return (
     <>
@@ -75,8 +68,6 @@ export const Comments = memo(({ comment, threadId, replies }: CommentProps) => {
               <CreateThreadAndComment
                 threadId={threadId}
                 type="comment"
-                opStatus={isShowOpStatus}
-                setOpStatus={onChangeOpStatus}
                 onCancel={() => setIsCommentOpen(false)}
                 repliesTo={comment.messageNumber}
               />
