@@ -3,12 +3,23 @@ import { NavBar } from "../components/NavBar";
 import { Inter } from "next/font/google";
 import { TanstackProvider } from "./providers/tanstack-provider";
 import { Bounce, ToastContainer } from "react-toastify";
+import { Metadata } from "next";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
   variable: "--font-inter",
   weight: ["400", "500"],
 });
+
+export const metadata: Metadata = {
+  title: {
+    template: "HashThread · %s",
+    absolute: "HashThread",
+  },
+  icons: {
+    icon: "/LogoIcon.png",
+  },
+};
 
 export default function RootLayout({
   children,

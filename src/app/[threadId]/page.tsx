@@ -1,6 +1,11 @@
 import { Feed } from "@/components/Feed";
 import { Switcher } from "@/components/Switcher";
 import { ThreadWrapper } from "@/components/ThreadWrapper";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Comments",
+};
 
 export default async function CommentsPage({
   params,

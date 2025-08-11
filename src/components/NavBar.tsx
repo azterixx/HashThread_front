@@ -3,7 +3,7 @@ import { HEADER_MENU } from "@/shared/const/menu";
 import { cn } from "@/shared/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Logo from "@/icons/LogoIcon.png";
+import Logo from "../../public/LogoIcon.png";
 
 export const NavBar = () => {
   const pathname = usePathname();
